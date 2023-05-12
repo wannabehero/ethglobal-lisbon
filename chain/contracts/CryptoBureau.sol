@@ -5,7 +5,7 @@ import { Bureau } from "./base/Bureau.sol";
 import { IWorldID } from "./interfaces/IWorldID.sol";
 import { ByteHasher } from "./utils/ByteHasher.sol";
 
-import "hardhat/console.sol";
+// import "hardhat/console.sol";
 
 contract CryptoBureau is Bureau {
     using ByteHasher for bytes;
@@ -113,9 +113,9 @@ contract CryptoBureau is Bureau {
         } else if (data.totalBorrowed > data.totalRepaid) {
             base = data.base / 2 ether; // NOTE: very basic
         } else {
-            console.log("repaid", data.totalRepaid);
+            // console.log("repaid", data.totalRepaid);
             uint256 overage = data.totalRepaid * 1 ether / data.totalBorrowed;
-            console.log("overage", data.totalRepaid);
+            // console.log("overage", data.totalRepaid);
             base = data.base * overage * 1.1 ether / 1 ether / 1 ether;
         }
 
@@ -123,7 +123,7 @@ contract CryptoBureau is Bureau {
             base = _maxBaseScore;
         }
 
-        console.log(base);
+        // console.log(base);
 
         // 0.5 + 1 * (1 - 2/10) = 1.3
         uint256 k = minK + (maxK - minK) * (1 ether - base * 1 ether / _maxBaseScore) / 1 ether;
