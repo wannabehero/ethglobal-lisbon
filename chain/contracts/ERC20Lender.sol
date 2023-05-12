@@ -41,7 +41,7 @@ contract ERC20Lender is Context {
         return _lendingValue * score.collateralCoef / 1 ether;
     }
 
-    function borrow(uint256 amount) external returns (uint256) {
+    function borrow(uint256 amount) external {
         address account = _msgSender();
 
         uint256 _current = _collaterals[account];
@@ -54,16 +54,14 @@ contract ERC20Lender is Context {
         _lendingToken.transfer(account, amount);
 
         _bureau.onBorrow(account, _tokenValue(_collateralToken, amount));
-        return 0;
     }
 
-    function repay(uint256 amount) external returns (uint256) {
+    function repay(uint256 amount) external {
         _loans[_msgSender()] -= amount;
 
         _lendingToken.transferFrom(_msgSender(), address(this), amount);
 
         _bureau.onRepay(_msgSender(), _tokenValue(_collateralToken, amount));
-        return 0;
     }
 
     function increaseCollateral(uint256 amount) external {
@@ -75,6 +73,8 @@ contract ERC20Lender is Context {
     }
 
     function decreaseCollateral(uint256 amount) external {
+        // TODO: can't decrease collateral if it's required for loans
+
         _collaterals[_msgSender()] -= amount;
 
         _collateralToken.transfer(_msgSender(), amount);
