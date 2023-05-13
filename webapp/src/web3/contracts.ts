@@ -1,4 +1,4 @@
-import { BigNumber, Contract, ethers } from 'ethers';
+import { Contract, ethers } from 'ethers';
 
 import CryptoBureau from '../../../chain/artifacts/contracts/CryptoBureau.sol/CryptoBureau.json';
 import SismoHelper from '../../../chain/artifacts/contracts/helpers/SismoHelper.sol/SismoHelper.json';
@@ -6,9 +6,8 @@ import TrueLayerHelper from '../../../chain/artifacts/contracts/helpers/TrueLaye
 import Verifier from '../../../chain/artifacts/contracts/ZKVerifier.sol/Verifier.json';
 import IERC20 from '../../../chain/artifacts/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol/IERC20Metadata.json';
 import ERC20Lender from '../../../chain/artifacts/contracts/ERC20Lender.sol/ERC20Lender.json';
-import { ERC20Contract, LenderContract, ScoreData } from './types';
+import { CryptoBureauContract, ERC20Contract, LenderContract } from './types';
 import {
-  CRYPTO_BUREAU_ADDRESS,
   POLYGON_HELPER_ADDRESS,
   SISMO_HELPER_ADDRESS,
   TRUE_LAYER_HELPER_ADDRESS,
@@ -27,8 +26,8 @@ const ZKVerifierInterface = new ethers.utils.Interface(Verifier.abi);
 const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
 const ERC20Interface = new ethers.utils.Interface(IERC20.abi);
 
-export async function getCryptoBureau(provider: SignerOrProvider): Promise<Contract> {
-  const cryptoBureau = new ethers.Contract(CRYPTO_BUREAU_ADDRESS, CryptoBureauInterface, provider);
+export async function getCryptoBureau(address: string, provider: SignerOrProvider): Promise<CryptoBureauContract> {
+  const cryptoBureau = new ethers.Contract(address, CryptoBureauInterface, provider);
   return cryptoBureau;
 }
 
@@ -60,28 +59,10 @@ export async function getERC20Lender(address: string, provider: SignerOrProvider
   return erc20Lender;
 }
 
-export async function getScoreData(address: string, provider: Provider): Promise<ScoreData> {
-  const bureau = await getCryptoBureau(provider);
-  try {
-    const scoreData = await bureau.scoreData(address);
-    return scoreData;
-  } catch (e) {
-    console.log(e);
-    return {
-      verified: false,
-      base: BigNumber.from(0),
-      totalBorrowed: BigNumber.from(0),
-      totalRepaid: BigNumber.from(0),
-      totalCollateral: BigNumber.from(0),
-    };
-  }
-}
-
 export async function getHelperClaims(
+  bureau: CryptoBureauContract,
   address: string | undefined,
-  provider: Provider,
 ): Promise<HelperClaim[]> {
-  const bureau = await getCryptoBureau(provider);
   const claims: HelperClaim[] = [
     {
       id: 'wc-id',

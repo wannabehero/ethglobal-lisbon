@@ -55,7 +55,7 @@ export default function MainBureau() {
   const [lendingTokenBalance, setLendingTokenBalance] = useState<BigNumber>(BigNumber.from(0));
   const [collateralTokenBalance, setCollateralTokenBalance] = useState<BigNumber>(BigNumber.from(0));
 
-  const { creditScore, reloadScore } = useCreditScore();
+  const { creditScore, collateralCoef, reloadScore } = useCreditScore();
 
   const { contract: lender } = useContract(LENDER_ADDRESS, getERC20Lender);
   const [collateralAddress, setCollateralAddress] = useState<string>();
@@ -70,6 +70,7 @@ export default function MainBureau() {
   const [lendingSymbol, setLendingSymbol] = useState<string>('');
 
   const [isLoadingButtons, setIsLoadingButtons] = useState<boolean>(false);
+  const [isActionInProgress, setIsActionInProgress] = useState<boolean>(false);
 
   const updateLenderBalances = useCallback(async () => {
     if (!lender || !address) {
@@ -138,16 +139,20 @@ export default function MainBureau() {
 
   const onLenderAction = async (action: () => Promise<any>, description: string) => {
     try {
+      setIsActionInProgress(true);
       const tx = await action();
       await tx.wait();
       await Promise.all([
         updateLenderBalances(),
         updateLendingTokenBalance(),
         updateCollateralTokenBalance(),
+        reloadScore(),
       ]);
       message.success(description);
     } catch (e: any) {
       message.error(e.reason ?? e.message);
+    } finally {
+      setIsActionInProgress(false);
     }
   };
 
@@ -156,10 +161,11 @@ export default function MainBureau() {
       {!address && <Typography.Title level={3}> Please connect your wallet </Typography.Title>}
       {address && (
         <Descriptions layout="vertical" bordered column={3}>
-          <Descriptions.Item label="Address" span={2}>
+          <Descriptions.Item label="Address">
             {address}
           </Descriptions.Item>
           <Descriptions.Item label="Base Score">{creditScore}</Descriptions.Item>
+          <Descriptions.Item label="Collateral coef">{collateralCoef}</Descriptions.Item>
           <Descriptions.Item label="Score Goals" span={3}>
             <List
               grid={{ gutter: 16, column: 4 }}
@@ -201,11 +207,13 @@ export default function MainBureau() {
                   <>
                     <TokenValueInput
                       action='Borrow'
+                      loading={isActionInProgress}
                       symbol={lendingSymbol}
                       onAction={(value) => onLenderAction(() => lender.borrow(ethers.utils.parseEther(value)), 'Borrowed!')}
                     />
                     <TokenValueInput
                       action='Repay'
+                      loading={isActionInProgress}
                       symbol={lendingSymbol}
                       onAction={(value) => onLenderAction(() => lender.repay(ethers.utils.parseEther(value)), 'Repaid!')}
                     />
@@ -236,11 +244,13 @@ export default function MainBureau() {
                   <>
                   <TokenValueInput
                     action='Increase'
+                    loading={isActionInProgress}
                     symbol={collateralSymbol}
                     onAction={(value) => onLenderAction(() => lender.increaseCollateral(ethers.utils.parseEther(value)), 'Increased collateral!')}
                   />
                   <TokenValueInput
                     action='Withdraw'
+                    loading={isActionInProgress}
                     symbol={collateralSymbol}
                     onAction={(value) => onLenderAction(() => lender.decreaseCollateral(ethers.utils.parseEther(value)), 'Decreased collateral!')}
                   />

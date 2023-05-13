@@ -13,7 +13,7 @@ import { polygonMumbai } from 'wagmi/chains';
 import { alchemyProvider } from 'wagmi/providers/alchemy';
 import { publicProvider } from 'wagmi/providers/public';
 
-const ALCHEMY_KEY = '';
+const ALCHEMY_KEY = import.meta.env.VITE_ALCHEMY_KEY ?? '';
 
 export const { chains, provider } = configureChains(
   [polygonMumbai],

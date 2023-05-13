@@ -1,11 +1,11 @@
-import { BigNumber, Contract } from 'ethers';
+import { BigNumber, Contract, ContractTransaction } from 'ethers';
 
 export type ERC20Contract = Contract | {
   balanceOf: (address: string) => Promise<BigNumber>;
-  transfer: (address: string, amount: BigNumber) => Promise<void>;
+  transfer: (address: string, amount: BigNumber) => Promise<ContractTransaction>;
   allowance: (owner: string, spender: string) => Promise<BigNumber>;
-  approve: (spender: string, amount: BigNumber) => Promise<void>;
-  transferFrom: (from: string, to: string, amount: BigNumber) => Promise<void>;
+  approve: (spender: string, amount: BigNumber) => Promise<ContractTransaction>;
+  transferFrom: (from: string, to: string, amount: BigNumber) => Promise<ContractTransaction>;
   symbol: () => Promise<string>;
   decimals: () => Promise<number>;
   name: () => Promise<string>;
@@ -17,13 +17,20 @@ export type LenderContract = Contract | {
   collateralBalance: (address: string) => Promise<BigNumber>;
   borrowedBalance: (address: string) => Promise<BigNumber>;
   collateralRequired: (address: string, amount: BigNumber) => Promise<BigNumber>;
-  borrow: (amount: BigNumber) => Promise<void>;
-  repay: (amount: BigNumber) => Promise<void>;
-  increaseCollateral: (amount: BigNumber) => Promise<void>;
-  decreaseCollateral: (amount: BigNumber) => Promise<void>;
+  borrow: (amount: BigNumber) => Promise<ContractTransaction>;
+  repay: (amount: BigNumber) => Promise<ContractTransaction>;
+  increaseCollateral: (amount: BigNumber) => Promise<ContractTransaction>;
+  decreaseCollateral: (amount: BigNumber) => Promise<ContractTransaction>;
 }
 
-export type AnyContract = Contract | ERC20Contract | LenderContract;
+export type CryptoBureauContract = Contract | {
+  register: (root: string, hash: string, proof: any) => Promise<ContractTransaction>;
+  isHelperUsed: (address: string, helperAddress: string) => Promise<boolean>;
+  scoreData: (address: string) => Promise<ScoreData>;
+  score: (address: string) => Promise<[BigNumber]>;
+}
+
+export type AnyContract = Contract | ERC20Contract | LenderContract | CryptoBureauContract;
 
 export interface ScoreData {
   verified: boolean;
