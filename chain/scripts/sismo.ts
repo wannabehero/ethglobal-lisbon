@@ -1,17 +1,18 @@
 import { ethers } from "hardhat";
+import { LATEST_BUREAU, SISMO_APP_ID } from "./const";
 
 async function deploy() {
-  const bureau = await ethers.getContractAt("CryptoBureau", "0xd8A8C4BB1eb794892e8DD64776A627b8a5EE7d1a");
+  const bureau = await ethers.getContractAt("CryptoBureau", LATEST_BUREAU);
   const SismoHelper = await ethers.getContractFactory("SismoHelper");
   const helper = await SismoHelper.deploy(
     bureau.address,
-    "0x2d50ca0a1c74f4c2a562a2755b1bb6f0"
+    SISMO_APP_ID
   );
   await helper.deployed();
 
-  // await bureau.setHelper(helper.address, {
-  //   multiplier: 1.5,
-  // });
+  await bureau.setHelper(helper.address, {
+    multiplier: ethers.utils.parseEther("1.5"),
+  });
 
   console.log("SismoHelper deployed to:", helper.address);
 

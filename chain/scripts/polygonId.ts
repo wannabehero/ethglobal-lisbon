@@ -1,7 +1,8 @@
 import { ethers } from "hardhat";
+import { LATEST_BUREAU } from "./const";
 
 async function deploy() {
-  const bureau = await ethers.getContractAt("CryptoBureau", "0xd8A8C4BB1eb794892e8DD64776A627b8a5EE7d1a");
+  const bureau = await ethers.getContractAt("CryptoBureau", LATEST_BUREAU);
 
   const PolygonIdHelper = await ethers.getContractFactory("PolygonIdHelper", {
     libraries: {
@@ -11,6 +12,10 @@ async function deploy() {
   } );
   const helper = await PolygonIdHelper.deploy(bureau.address);
   await helper.deployed();
+
+  await bureau.setHelper(helper.address, {
+    multiplier: ethers.utils.parseEther("1.1"),
+  });
 
   console.log("contract address:", helper.address);
 

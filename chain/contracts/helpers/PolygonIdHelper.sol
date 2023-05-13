@@ -42,7 +42,7 @@ contract PolygonIdHelper is Helper, ZKPVerifier {
 
         uint256 id = inputs[validator.getChallengeInputIndex()];
         if (_submittedProofs[id] == address(0)) {
-            // _bureau.verify(_msgSender());
+            _bureau.verify(_msgSender());
             _submittedProofs[id] = _msgSender();
 
             emit ProofAccepted(_msgSender(), id);
