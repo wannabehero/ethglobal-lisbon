@@ -3,9 +3,6 @@ import { useAccount, useProvider } from 'wagmi';
 import { useCreditScore } from '../../hooks/useCreditScore';
 import ClaimHelperCard from '../ClaimHelperCard';
 import { IClaimHelperItem } from './interfaces';
-import { SismoConnect } from '@sismo-core/sismo-connect-client';
-import { SISMO_CONFIG } from '../ClaimHelperCard/consts';
-import TokenInfo from '../TokenInfo';
 import { LENDER_ADDRESS } from '../../web3/consts';
 import TokenValueInput from '../TokenValueInput/TokenValueInput';
 import { useHelperClaims } from './hooks';
@@ -58,11 +55,10 @@ export default function MainBureau() {
   const [borrowedBalance, setBorrowedBalance] = useState<BigNumber>(BigNumber.from(0));
   const [collateralBalance, setCollateralBalance] = useState<BigNumber>(BigNumber.from(0));
 
-  const creditScore = useCreditScore(address, provider);
+  const [lendingTokenBalance, setLendingTokenBalance] = useState<BigNumber>(BigNumber.from(0));
+  const [collateralTokenBalance, setCollateralTokenBalance] = useState<BigNumber>(BigNumber.from(0));
 
-  // const [value, setValue] = useState<string>('');
-  // const [symbol, setSymbol] = useState<string>('');
-  // const { contract } = useContract(token, getERCTokenContract);
+  const creditScore = useCreditScore(address, provider);
 
   const { contract: lender } = useContract(LENDER_ADDRESS, getERC20Lender);
   const [collateralAddress, setCollateralAddress] = useState<string>();
@@ -88,6 +84,19 @@ export default function MainBureau() {
     ]);
   }, [lender, address]);
 
+  const updateCollateralTokenBalance = useCallback(async () => {
+    if (!collateral || !address) {
+      return;
+    }
+    collateral.balanceOf(address).then(setCollateralTokenBalance);
+  }, [address, collateral]);
+
+  const updateLendingTokenBalance = useCallback(async () => {
+    if (!lending || !address) {
+      return;
+    }
+    lending.balanceOf(address).then(setLendingTokenBalance);
+  }, [address, lending]);
 
   useEffect(() => {
     if (!lender || !address) {
@@ -104,6 +113,7 @@ export default function MainBureau() {
     }
     lending.symbol().then(setLendingSymbol);
     lending.allowance(address, LENDER_ADDRESS).then((allowance: BigNumber) => setShowApproveLending(allowance.isZero()));
+    updateLendingTokenBalance();
   }, [lending, address]);
 
   useEffect(() => {
@@ -112,6 +122,7 @@ export default function MainBureau() {
     }
     collateral.symbol().then(setCollateralSymbol);
     collateral.allowance(address, LENDER_ADDRESS).then((allowance: BigNumber) => setShowApproveCollateral(allowance.isZero()));
+    updateCollateralTokenBalance();
   }, [collateral]);
 
   const onApprove = async (token: ERC20Contract, callback: () => void) => {
@@ -132,7 +143,11 @@ export default function MainBureau() {
     try {
       const tx = await action();
       await tx.wait();
-      await updateLenderBalances();
+      await Promise.all([
+        updateLenderBalances(),
+        updateLendingTokenBalance(),
+        updateCollateralTokenBalance(),
+      ]);
       message.success(description);
     } catch (e: any) {
       message.error(e.reason ?? e.message);
@@ -170,12 +185,16 @@ export default function MainBureau() {
           <Descriptions.Item label="Wallet">
             {
               collateral && (
-                <TokenInfo contract={collateral} symbol={collateralSymbol} />
+                <Typography.Paragraph>
+                  Balance: {ethers.utils.formatEther(collateralTokenBalance)} {collateralSymbol}
+                </Typography.Paragraph>
               )
             }
             {
               lending && (
-                <TokenInfo contract={lending} symbol={lendingSymbol} />
+                <Typography.Paragraph>
+                  Balance: {ethers.utils.formatEther(lendingTokenBalance)} {lendingSymbol}
+                </Typography.Paragraph>
               )
             }
           </Descriptions.Item>
