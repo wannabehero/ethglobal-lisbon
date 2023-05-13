@@ -95,6 +95,10 @@ contract CryptoBureau is Bureau {
         _accounts[_msgSender()] = nullifierHash;
     }
 
+    function isHelperUsed(address account, address helper) external view returns (bool) {
+        return _usedHelpers[_accounts[account]][helper];
+    }
+
     function scoreData(address account) external view returns (ScoreData memory) {
         return _scoreDataForAccount(account);
     }
