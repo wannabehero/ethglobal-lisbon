@@ -18,18 +18,24 @@ async function deploy() {
 }
 
 async function main() {
-  // you can run https://go.dev/play/p/rnrRbxXTRY6 to get schema hash and claimPathKey using YOUR schema
-  const schemaBigInt = "74977327600848231385663280181476307657"
-   // merklized path to field in the W3C credential according to JSONLD  schema e.g. birthday in the KYCAgeCredential under the url "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld"
-  const schemaClaimPathKey = "20376033832371109177683048456014525905119173674985843915445634726167450989630"
+  // KYC
+  // // you can run https://go.dev/play/p/rnrRbxXTRY6 to get schema hash and claimPathKey using YOUR schema
+  // const schemaBigInt = "74977327600848231385663280181476307657"
+  //  // merklized path to field in the W3C credential according to JSONLD  schema e.g. birthday in the KYCAgeCredential under the url "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld"
+  // const schemaClaimPathKey = "20376033832371109177683048456014525905119173674985843915445634726167450989630"
+
+  // Diploma
+  // generated with https://go.dev/play/p/P4-PSKF-ihG
+  const schemaBigInt = "238194148390727052630409939902286551072"
+  const schemaClaimPathKey = "4733956571025984262884587616230959074711837039774257046884151643564198805767";
 
   const requestId = 1;
 
   const query = {
     schema: schemaBigInt,
     claimPathKey: schemaClaimPathKey,
-    operator: 2, // less than
-    value: [20020101, ...new Array(63).fill(0).map(i => 0)],
+    operator: 3, // greater than
+    value: [95, ...new Array(63).fill(0).map(i => 0)],
   };
 
   const helper = await deploy();

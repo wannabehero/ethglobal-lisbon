@@ -14,7 +14,7 @@ const PolygonID = () => {
 
   const onProof = () => {
     modal.info({
-      title: 'PolygonID ZK Age Verification',
+      title: 'PolygonID ZK Diploma Verification',
       content: qr,
       width: 620,
       centered: true,
@@ -29,7 +29,7 @@ const PolygonID = () => {
 
   return (
     <Button shape="round" onClick={onProof}>
-      Proof Age
+      Proof GPA Score
     </Button>
   );
 };

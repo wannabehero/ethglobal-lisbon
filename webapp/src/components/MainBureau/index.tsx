@@ -37,7 +37,7 @@ export default function MainBureau() {
     },
     {
       cardKey: 'polygon-id',
-      label: 'ZP Proof of Age',
+      label: 'ZP Proof of Diploma',
       url: 'https://polygon.technology/',
       scoreRate: '0.1',
     }
