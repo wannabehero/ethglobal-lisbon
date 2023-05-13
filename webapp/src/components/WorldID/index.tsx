@@ -63,7 +63,7 @@ export default function WorldIDBody({ verified }: { verified: boolean }) {
         const receipt = await tx.wait();
 
         // TODO: check receipt and trigger stats reload?
-        setIsVerified(true);
+        // setIsVerified(true);
 
         message.success('World ID Verified!');
       } catch (err: any) {

@@ -32,3 +32,5 @@ export const SISMO_CLAIM: ClaimRequest = {
   // here: ens-domains-holders
   groupId: '0x8b64c959a715c6b10aa8372100071ca7',
 };
+
+export const SISMO_GROUP_ID: string = '0x8b64c959a715c6b10aa8372100071ca7';

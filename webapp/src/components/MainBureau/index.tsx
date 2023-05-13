@@ -60,23 +60,9 @@ export default function MainBureau() {
 
   const creditScore = useCreditScore(address, provider);
 
-  const urlParams = new URLSearchParams(window.location.search);
-  const sismoConnectResponse = urlParams.get('sismoConnectResponseCompressed');
-  const storedValue = localStorage.getItem('sismo-connect');
-  if (sismoConnectResponse && (!storedValue || storedValue === '')) {
-    // create a new SismoConnect instance with the client configuration
-    const sismoConnect = SismoConnect(SISMO_CONFIG);
-    const sismoConnectResponseBytes = sismoConnect.getResponseBytes();
-    if (sismoConnectResponseBytes) {
-      console.log(`Sismo response proof: ${sismoConnectResponseBytes}`);
-
-      // TODO: show loading and send verification response to the chain
-      message.info('Sending verification to verify Sismo proof: ' + sismoConnectResponse);
-      localStorage.setItem('sismo-connect', sismoConnectResponseBytes);
-    } else {
-      console.log(`Failed to get sismo response: reverted`);
-    }
-  }
+  // const [value, setValue] = useState<string>('');
+  // const [symbol, setSymbol] = useState<string>('');
+  // const { contract } = useContract(token, getERCTokenContract);
 
   const { contract: lender } = useContract(LENDER_ADDRESS, getERC20Lender);
   const [collateralAddress, setCollateralAddress] = useState<string>();

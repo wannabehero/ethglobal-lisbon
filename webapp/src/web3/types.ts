@@ -25,7 +25,7 @@ export type LenderContract = Contract | {
 
 export type AnyContract = Contract | ERC20Contract | LenderContract;
 
-export interface ScoreDate {
+export interface ScoreData {
   verified: boolean;
   base: BigNumber;
   totalBorrowed: BigNumber;
