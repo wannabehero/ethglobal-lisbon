@@ -1,10 +1,14 @@
-import { Button, Card, Descriptions, List, Typography } from 'antd';
+import { App, Button, Descriptions, List, Typography } from 'antd';
 import { useAccount, useProvider, useSigner } from 'wagmi';
 import { useCreditScore } from '../../hooks/useCreditScore';
 import ClaimHelperCard from '../ClaimHelperCard';
 import { IClaimHelperItem } from './interfaces';
+import { SismoConnect } from '@sismo-core/sismo-connect-client';
+import { SISMO_CONFIG } from '../ClaimHelperCard/consts';
 
 export default function MainBureau() {
+  const { modal, message } = App.useApp();
+
   const provider = useProvider();
   const { address } = useAccount();
   const { data: signer } = useSigner();
@@ -40,6 +44,24 @@ export default function MainBureau() {
   const collateralBalance = 150;
 
   const creditScore = useCreditScore(address, provider);
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const sismoConnectResponse = urlParams.get('sismoConnectResponseCompressed');
+  const storedValue = localStorage.getItem('sismo-connect');
+  if (sismoConnectResponse && (!storedValue || storedValue === '')) {
+    // create a new SismoConnect instance with the client configuration
+    const sismoConnect = SismoConnect(SISMO_CONFIG);
+    const sismoConnectResponseBytes = sismoConnect.getResponseBytes();
+    if (sismoConnectResponseBytes) {
+      console.log(`Sismo response proof: ${sismoConnectResponseBytes}`);
+
+      // TODO: show loading and send verification response to the chain
+      message.info('Sending verification to verify Sismo proof: ' + sismoConnectResponse);
+      localStorage.setItem('sismo-connect', sismoConnectResponseBytes);
+    } else {
+      console.log(`Failed to get sismo response: reverted`);
+    }
+  }
 
   return (
     <div className="content-inner">

@@ -15,6 +15,7 @@ const ZKVerifierInterface = new ethers.utils.Interface(Verifier.abi);
 // const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
 // const WorldIdHelperInterface = new ethers.utils.Interface(WorldIdHelper.abi);
 
+
 export async function getCryptoBureau(provider: Provider): Promise<Contract> {
   const cryptoBureau = new ethers.Contract(CRYPTO_BUREAU_ADDRESS, CryptoBureauInterface, provider);
   return cryptoBureau;
