@@ -24,5 +24,6 @@ import { ARTIFACTS, PROVIDER } from './consts';
     ZkService,
   ],
   controllers: [ZkController],
+  exports: [ZkService],
 })
 export class ZkModule {}
