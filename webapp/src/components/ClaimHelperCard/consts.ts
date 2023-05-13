@@ -14,15 +14,15 @@ export const SISMO_CONFIG: SismoConnectClientConfig = {
     // will use the Dev Sismo Data Vault https://dev.vault-beta.sismo.io/
     enabled: true,
     // overrides a group with these addresses
-    devGroups: [
-      {
-        groupId: '0x8b64c959a715c6b10aa8372100071ca7',
-        data: {
-          '0x3C9Fd1778463066a8614B2B2F7CfBdf5491F4875': 0,
-          '0x76e7DB3Ee732c3C668b4B78B7D0643339C63493e': 1,
-        },
-      },
-    ],
+    // devGroups: [
+    //   {
+    //     groupId: '0x8b64c959a715c6b10aa8372100071ca7',
+    //     data: {
+    //       '0x3C9Fd1778463066a8614B2B2F7CfBdf5491F4875': 0,
+    //       '0x76e7DB3Ee732c3C668b4B78B7D0643339C63493e': 1,
+    //     },
+    //   },
+    // ],
   },
 };
 
