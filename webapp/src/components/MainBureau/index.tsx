@@ -35,6 +35,12 @@ export default function MainBureau() {
       scoreRate: '0.2',
       // todo: data to get proof of funds
     },
+    {
+      cardKey: 'polygon-id',
+      label: 'ZP Proof of Age',
+      url: 'https://polygon.technology/',
+      scoreRate: '0.1',
+    }
   ];
 
   // TODO: pull from smart contract

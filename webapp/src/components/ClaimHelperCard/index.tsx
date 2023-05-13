@@ -9,6 +9,7 @@ import {
   SismoConnect,
   SismoConnectClientConfig,
 } from '@sismo-core/sismo-connect-client';
+import PolygonID from '../PolygonID';
 
 export default function ClaimHelperCard(item: IClaimHelperItem) {
   const provider = useProvider();
@@ -64,6 +65,13 @@ export default function ClaimHelperCard(item: IClaimHelperItem) {
           <Button shape="round" onClick={onSismoProofRequest}>
             Proof Noun Ownership
           </Button>
+        );
+      }
+      break;
+    case 'polygon-id':
+      {
+        component = (
+          <PolygonID />
         );
       }
       break;
