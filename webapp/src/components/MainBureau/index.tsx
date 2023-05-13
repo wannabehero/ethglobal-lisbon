@@ -13,6 +13,7 @@ import { useEffect, useState } from 'react';
 import useContract from '../../hooks/useContract';
 import { getERC20Lender, getERCTokenContract } from '../../web3/contracts';
 import { BigNumber, ethers } from 'ethers';
+import { ERC20Contract } from '../../web3/types';
 
 const claimsData: IClaimHelperItem[] = [
   {
@@ -80,12 +81,16 @@ export default function MainBureau() {
   const { contract: lender } = useContract(LENDER_ADDRESS, getERC20Lender);
   const [collateralAddress, setCollateralAddress] = useState<string>();
   const [lendingAddress, setLendingAddress] = useState<string>();
+  const [showApproveCollateral, setShowApproveCollateral] = useState<boolean>(false);
+  const [showApproveLending, setShowApproveLending] = useState<boolean>(false);
 
   const { contract: collateral } = useContract(collateralAddress, getERCTokenContract);
   const { contract: lending } = useContract(lendingAddress, getERCTokenContract);
 
   const [collateralSymbol, setCollateralSymbol] = useState<string>('');
   const [lendingSymbol, setLendingSymbol] = useState<string>('');
+
+  const [isLoadingButtons, setIsLoadingButtons] = useState<boolean>(false);
 
   useEffect(() => {
     if (!lender || !address) {
@@ -98,18 +103,33 @@ export default function MainBureau() {
   }, [lender, setLendingAddress, setCollateralAddress, address]);
 
   useEffect(() => {
-    if (!lending) {
+    if (!lending || !address) {
       return;
     }
     lending.symbol().then(setLendingSymbol);
-  }, [lending]);
+    lending.allowance(address, LENDER_ADDRESS).then((allowance: BigNumber) => setShowApproveLending(allowance.isZero()));
+  }, [lending, address]);
 
   useEffect(() => {
-    if (!collateral) {
+    if (!collateral || !address) {
       return;
     }
     collateral.symbol().then(setCollateralSymbol);
+    collateral.allowance(address, LENDER_ADDRESS).then((allowance: BigNumber) => setShowApproveCollateral(allowance.isZero()));
   }, [collateral]);
+
+  const onApprove = async (token: ERC20Contract, callback: () => void) => {
+    try {
+      setIsLoadingButtons(true);
+      const tx = await token.approve(LENDER_ADDRESS, ethers.constants.MaxUint256);
+      await tx.wait();
+      callback();
+    } catch (e: any) {
+      message.error(e.reason ?? e.message);
+    } finally {
+      setIsLoadingButtons(false);
+    }
+  };
 
   return (
     <div className="content-inner">
@@ -166,6 +186,18 @@ export default function MainBureau() {
                 symbol={lendingSymbol}
                 onAction={(value) => console.log(value)}
               />
+               {
+                lending && showApproveLending && (
+                  <Button
+                    loading={isLoadingButtons}
+                    type='dashed'
+                    style={{ minWidth: '200px' }}
+                    onClick={() => onApprove(lending, () => setShowApproveLending(false))}
+                  >
+                    Approve {lendingSymbol}
+                  </Button>
+                )
+              }
             </Space>
           </Descriptions.Item>
           <Descriptions.Item label="Collateral">
@@ -183,6 +215,18 @@ export default function MainBureau() {
                 symbol={collateralSymbol}
                 onAction={(value) => console.log(value)}
               />
+              {
+                collateral && showApproveCollateral && (
+                  <Button
+                    loading={isLoadingButtons}
+                    type='dashed'
+                    style={{ minWidth: '200px' }}
+                    onClick={() => onApprove(collateral, () => setShowApproveCollateral(false))}
+                  >
+                    Approve {collateralSymbol}
+                  </Button>
+                )
+              }
             </Space>
           </Descriptions.Item>
         </Descriptions>
