@@ -14,7 +14,7 @@ export function useCreditScore(address?: string, provider?: Provider) {
       return;
     }
     console.log('useCreditScore', address, provider);
-    getScoreData(address, provider).then((score) => handleScoreChange(bnToScore(score)));
+    getScoreData(address, provider).then((score) => handleScoreChange(bnToScore(score.base)));
   });
 
   return [creditScore] as const;

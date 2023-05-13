@@ -24,3 +24,11 @@ export type LenderContract = Contract | {
 }
 
 export type AnyContract = Contract | ERC20Contract | LenderContract;
+
+export interface ScoreDate {
+  verified: boolean;
+  base: BigNumber;
+  totalBorrowed: BigNumber;
+  totalRepaid: BigNumber;
+  totalCollateral: BigNumber;
+}

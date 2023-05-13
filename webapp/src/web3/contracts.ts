@@ -5,8 +5,15 @@ import TrueLayerHelper from '../../../chain/artifacts/contracts/helpers/TrueLaye
 import Verifier from '../../../chain/artifacts/contracts/ZKVerifier.sol/Verifier.json';
 import IERC20 from '../../../chain/artifacts/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol/IERC20Metadata.json';
 import ERC20Lender from '../../../chain/artifacts/contracts/ERC20Lender.sol/ERC20Lender.json';
-import { CRYPTO_BUREAU_ADDRESS, TRUE_LAYER_HELPER_ADDRESS, ZK_VERIFIER_ADDRESS } from './consts';
-import { ERC20Contract, LenderContract } from './types';
+import { ERC20Contract, LenderContract, ScoreDate } from './types';
+import {
+  CRYPTO_BUREAU_ADDRESS,
+  POLYGON_HELPER_ADDRESS,
+  SISMO_HELPER_ADDRESS,
+  TRUE_LAYER_HELPER_ADDRESS,
+  ZK_VERIFIER_ADDRESS,
+} from './consts';
+import { HelperClaim } from '../components/MainBureau/hooks';
 
 export type Provider = ethers.providers.Provider;
 export type Signer = ethers.Signer;
@@ -25,12 +32,20 @@ export async function getCryptoBureau(provider: Provider): Promise<Contract> {
 }
 
 export async function getTrueLayerHelper(providerOrSigner: Provider | Signer): Promise<Contract> {
-  const trueLayerHelper = new ethers.Contract(TRUE_LAYER_HELPER_ADDRESS, TrueLayerHelperInterface, providerOrSigner);
+  const trueLayerHelper = new ethers.Contract(
+    TRUE_LAYER_HELPER_ADDRESS,
+    TrueLayerHelperInterface,
+    providerOrSigner,
+  );
   return trueLayerHelper;
 }
 
 export async function getZKVerifier(providerOrSigner: Provider | Signer): Promise<Contract> {
-  const zkVerifier = new ethers.Contract(ZK_VERIFIER_ADDRESS, ZKVerifierInterface, providerOrSigner);
+  const zkVerifier = new ethers.Contract(
+    ZK_VERIFIER_ADDRESS,
+    ZKVerifierInterface,
+    providerOrSigner,
+  );
   return zkVerifier;
 }
 
@@ -39,14 +54,75 @@ export async function getERC20Lender(address: string, providerOrSigner: Provider
   return erc20Lender;
 }
 
-export async function getScoreData(address: string, provider: Provider): Promise<BigNumber> {
+export async function getScoreData(address: string, provider: Provider): Promise<ScoreDate> {
   const bureau = await getCryptoBureau(provider);
-  try{
+  try {
     const scoreData = await bureau.scoreData(address);
     return scoreData;
   } catch (e) {
     console.log(e);
-    return BigNumber.from(0);
+    return {
+      verified: false,
+      base: BigNumber.from(0),
+      totalBorrowed: BigNumber.from(0),
+      totalRepaid: BigNumber.from(0),
+      totalCollateral: BigNumber.from(0),
+    };
+  }
+}
+
+export async function getHelperClaims(
+  address: string | undefined,
+  provider: Provider,
+): Promise<HelperClaim[]> {
+  const bureau = await getCryptoBureau(provider);
+  const claims: HelperClaim[] = [
+    {
+      id: 'wc-id',
+      verified: false,
+    },
+    {
+      id: 'sismo-noun',
+      verified: false,
+    },
+    {
+      id: 'true-layer',
+      verified: false,
+    },
+    {
+      id: 'polygon-id',
+      verified: false,
+    },
+  ];
+
+  if(!address){
+    console.log("No address provided, returning empty claims");
+    return claims;
+  }
+
+  try {
+    const [claimSismoNoun, claimFundszk, claimPolygonDiploma] = await Promise.all([
+      bureau.isHelperUsed(address, SISMO_HELPER_ADDRESS),
+      bureau.isHelperUsed(address, TRUE_LAYER_HELPER_ADDRESS),
+      bureau.isHelperUsed(address, POLYGON_HELPER_ADDRESS),
+    ]);
+
+    // costyl to verify world id claim
+    try {
+      await bureau.score(address);
+      claims[0].verified = true;
+    } catch (e) {
+      console.log(`World ID claim verification failed, consider World ID not verified: ${e}`);
+    }
+
+    // set claims
+    claims[1].verified = claimSismoNoun;
+    claims[2].verified = claimFundszk;
+    claims[3].verified = claimPolygonDiploma;
+    return claims;
+  } catch (e) {
+    console.log(e);
+    return claims;
   }
 }
 
@@ -57,7 +133,6 @@ export async function getERCTokenContract(address: string, providerOrSigner: Pro
 // TODO: add calls to get Helper status for claims
 
 // TODO: add WorldIDHelper call to verify proof
-
 
 // calls to abis
 
