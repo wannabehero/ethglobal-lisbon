@@ -1,30 +1,21 @@
 import { Button, Card } from 'antd';
 import { IClaimHelperItem } from '../MainBureau/interfaces';
-import { useProvider, useAccount } from 'wagmi';
-import { CredentialType, IDKitWidget, ISuccessResult } from '@worldcoin/idkit';
 import TrueLayerZK from '../TrueLayerZK';
-import { SISMO_CLAIM, SISMO_CONFIG, WORLD_ID_APP_ACTION, WORLD_ID_APP_ID, WORLD_ID_APP_SIGNAL } from './consts';
 import {
-  ClaimRequest,
+  SISMO_CLAIM,
+  SISMO_CONFIG,
+} from './consts';
+import {
   SismoConnect,
-  SismoConnectClientConfig,
 } from '@sismo-core/sismo-connect-client';
+import WorldIDBody from '../WorldID';
 import PolygonID from '../PolygonID';
 
 export default function ClaimHelperCard(item: IClaimHelperItem) {
-  const provider = useProvider();
-  const { address } = useAccount();
-
-  const credential_types = [CredentialType.Orb];
-
-  const onSuccessWorldID = (result: ISuccessResult) => {
-    console.log(result);
-  };
-
   const onSismoProofRequest = async () => {
     // create a new SismoConnect instance with the client configuration
     const sismoConnect = SismoConnect(SISMO_CONFIG);
-    localStorage.setItem("sismo-connect", "");
+    localStorage.setItem('sismo-connect', '');
     // The `request` function sends your user to the Sismo Vault App
     // to generate the proof of group membership
     // After the proof generation, the user is redirected with it to your app
@@ -35,23 +26,7 @@ export default function ClaimHelperCard(item: IClaimHelperItem) {
   switch (item.cardKey) {
     case 'wc-id':
       {
-        component = (
-          <IDKitWidget
-            action={WORLD_ID_APP_ACTION}
-            signal={address || WORLD_ID_APP_SIGNAL}
-            onSuccess={onSuccessWorldID}
-            app_id={WORLD_ID_APP_ID}
-            credential_types={credential_types}
-            // walletConnectProjectId="get_this_from_walletconnect_portal"
-          >
-            {({ open }) => (
-              // TODO: add World ID icon icon={<icon here />}
-              <Button shape="round" onClick={open}>
-                Proof Humanity
-              </Button>
-            )}
-          </IDKitWidget>
-        );
+        component = <WorldIDBody />;
       }
       break;
     case 'true-layer':
