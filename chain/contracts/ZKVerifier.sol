@@ -188,7 +188,7 @@ contract Verifier {
             Proof memory proof, uint[1] memory input
         ) public view returns (bool r) {
         uint[] memory inputValues = new uint[](1);
-        
+
         for(uint i = 0; i < input.length; i++){
             inputValues[i] = input[i];
         }

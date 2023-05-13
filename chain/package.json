@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@openzeppelin/contracts": "^4.8.3",
+    "@sismo-core/sismo-connect-solidity": "^0.0.7",
     "@worldcoin/world-id-contracts": "^0.1.1"
   }
 }
