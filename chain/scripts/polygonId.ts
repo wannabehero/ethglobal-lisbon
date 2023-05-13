@@ -23,7 +23,7 @@ async function main() {
    // merklized path to field in the W3C credential according to JSONLD  schema e.g. birthday in the KYCAgeCredential under the url "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld"
   const schemaClaimPathKey = "20376033832371109177683048456014525905119173674985843915445634726167450989630"
 
-  const requestId = 13;
+  const requestId = 1;
 
   const query = {
     schema: schemaBigInt,
@@ -32,8 +32,8 @@ async function main() {
     value: [20020101, ...new Array(63).fill(0).map(i => 0)],
   };
 
-  // const helper = await deploy();
-  const helper = await ethers.getContractAt("PolygonIdHelper", "0xAB4B07cC81f14Baf1a9Cb818536feB5D93f2135f");
+  const helper = await deploy();
+  // const helper = await ethers.getContractAt("PolygonIdHelper", "0xAB4B07cC81f14Baf1a9Cb818536feB5D93f2135f");
 
   const validatorAddress = "0xF2D4Eeb4d455fb673104902282Ce68B9ce4Ac450"; // sig validator
   // const validatorAddress = "0x3DcAe4c8d94359D31e4C89D7F2b944859408C618"; // mtp validator
