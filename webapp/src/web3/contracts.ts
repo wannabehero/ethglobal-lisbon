@@ -1,11 +1,12 @@
 import { BigNumber, Contract, ethers } from 'ethers';
 
 import CryptoBureau from '../../../chain/artifacts/contracts/CryptoBureau.sol/CryptoBureau.json';
+import SismoHelper from '../../../chain/artifacts/contracts/helpers/SismoHelper.sol/SismoHelper.json';
 import TrueLayerHelper from '../../../chain/artifacts/contracts/helpers/TrueLayerHelper.sol/TrueLayerHelper.json';
 import Verifier from '../../../chain/artifacts/contracts/ZKVerifier.sol/Verifier.json';
 import IERC20 from '../../../chain/artifacts/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol/IERC20Metadata.json';
 import ERC20Lender from '../../../chain/artifacts/contracts/ERC20Lender.sol/ERC20Lender.json';
-import { ERC20Contract, LenderContract, ScoreDate } from './types';
+import { ERC20Contract, LenderContract, ScoreData } from './types';
 import {
   CRYPTO_BUREAU_ADDRESS,
   POLYGON_HELPER_ADDRESS,
@@ -19,6 +20,7 @@ export type Provider = ethers.providers.Provider;
 export type Signer = ethers.Signer;
 
 const CryptoBureauInterface = new ethers.utils.Interface(CryptoBureau.abi);
+const SismoHelperInterface = new ethers.utils.Interface(SismoHelper.abi);
 const TrueLayerHelperInterface = new ethers.utils.Interface(TrueLayerHelper.abi);
 const ZKVerifierInterface = new ethers.utils.Interface(Verifier.abi);
 const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
@@ -29,6 +31,11 @@ const ERC20Interface = new ethers.utils.Interface(IERC20.abi);
 export async function getCryptoBureau(provider: Provider): Promise<Contract> {
   const cryptoBureau = new ethers.Contract(CRYPTO_BUREAU_ADDRESS, CryptoBureauInterface, provider);
   return cryptoBureau;
+}
+
+export async function getSismoHelper(provider: Provider): Promise<Contract> {
+  const sismoHelper = new ethers.Contract(SISMO_HELPER_ADDRESS, SismoHelperInterface, provider);
+  return sismoHelper;
 }
 
 export async function getTrueLayerHelper(providerOrSigner: Provider | Signer): Promise<Contract> {
@@ -54,7 +61,7 @@ export async function getERC20Lender(address: string, providerOrSigner: Provider
   return erc20Lender;
 }
 
-export async function getScoreData(address: string, provider: Provider): Promise<ScoreDate> {
+export async function getScoreData(address: string, provider: Provider): Promise<ScoreData> {
   const bureau = await getCryptoBureau(provider);
   try {
     const scoreData = await bureau.scoreData(address);
