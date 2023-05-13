@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useState } from 'react';
-import { useProvider, useAccount } from 'wagmi';
-import { getHelperClaims } from '../../web3/contracts';
+import { useAccount } from 'wagmi';
+import { getCryptoBureau, getHelperClaims } from '../../web3/contracts';
+import useContract from '../../hooks/useContract';
+import { CRYPTO_BUREAU_ADDRESS } from '../../web3/consts';
 
 export interface HelperClaim {
   id: string;
@@ -8,27 +10,31 @@ export interface HelperClaim {
 }
 
 export const useHelperClaims = () => {
-  const provider = useProvider();
+  const { contract: cryptoBureau } = useContract(CRYPTO_BUREAU_ADDRESS, getCryptoBureau);
   const { address } = useAccount();
 
   const [helperClaims, setHelperClaims] = useState<HelperClaim[]>();
 
   const reloadHelperClaims = useCallback(async (address: string) => {
+    if (!cryptoBureau) {
+      return;
+    }
+
     try {
-      const claims = await getHelperClaims(address, provider);
+      const claims = await getHelperClaims(cryptoBureau, address);
       setHelperClaims(claims);
       console.log(`Loaded claims: ${JSON.stringify(claims)}`);
     } catch (e) {
       console.error(e);
     }
-  }, [setHelperClaims, provider]);
+  }, [setHelperClaims, cryptoBureau]);
 
   useEffect(() => {
-    if (!address) {
+    if (!address || !cryptoBureau) {
       return;
     }
     reloadHelperClaims(address);
-  }, [address]);
+  }, [address, cryptoBureau]);
 
   return { helperClaims, reloadHelperClaims };
 };

@@ -11,6 +11,7 @@ import { useAddRecentTransaction } from '@rainbow-me/rainbowkit';
 import { useProvider, useAccount, useSigner } from 'wagmi';
 import { getCryptoBureau } from '../../web3/contracts';
 import { CheckCircleOutlined } from '@ant-design/icons';
+import { CRYPTO_BUREAU_ADDRESS } from '../../web3/consts';
 
 interface WorldIDProps {
   verified: boolean;
@@ -45,8 +46,8 @@ export default function WorldID({ verified, onSuccess }: WorldIDProps) {
       try {
         const unpackedProof = ethers.utils.defaultAbiCoder.decode(['uint256[8]'], result.proof)[0];
 
-        const bureau = await getCryptoBureau(signer);
-        const tx: ContractTransaction = await bureau
+        const bureau = await getCryptoBureau(CRYPTO_BUREAU_ADDRESS, signer);
+        const tx = await bureau
           .register(result.merkle_root, result.nullifier_hash, unpackedProof);
         addRecentTransaction({
           hash: tx.hash,

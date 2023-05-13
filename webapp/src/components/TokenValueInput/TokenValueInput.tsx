@@ -4,11 +4,12 @@ import { useState } from 'react';
 interface ContractValueInputProps {
   symbol: string;
   action: string;
+  loading: boolean;
 
   onAction: (value: string) => void;
 }
 
-const TokenValueInput = ({ symbol, action, onAction }: ContractValueInputProps) => {
+const TokenValueInput = ({ symbol, action, onAction, loading }: ContractValueInputProps) => {
   const [value, setValue] = useState<string>('');
 
   return (
@@ -20,6 +21,7 @@ const TokenValueInput = ({ symbol, action, onAction }: ContractValueInputProps) 
         suffix={symbol} />
       <Button
         type="primary"
+        loading={loading}
         onClick={() => {
           onAction(value);
           setValue('');
