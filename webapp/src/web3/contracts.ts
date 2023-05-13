@@ -3,6 +3,7 @@ import { BigNumber, Contract, ethers } from 'ethers';
 import CryptoBureau from '../../../chain/artifacts/contracts/CryptoBureau.sol/CryptoBureau.json';
 import SismoHelper from '../../../chain/artifacts/contracts/helpers/SismoHelper.sol/SismoHelper.json';
 import TrueLayerHelper from '../../../chain/artifacts/contracts/helpers/TrueLayerHelper.sol/TrueLayerHelper.json';
+import PolygonHelper from '../../../chain/artifacts/contracts/helpers/PolygonIdHelper.sol/PolygonIdHelper.json';
 import Verifier from '../../../chain/artifacts/contracts/ZKVerifier.sol/Verifier.json';
 import IERC20 from '../../../chain/artifacts/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol/IERC20Metadata.json';
 import ERC20Lender from '../../../chain/artifacts/contracts/ERC20Lender.sol/ERC20Lender.json';
@@ -23,6 +24,7 @@ export type SignerOrProvider = Provider | Signer;
 const CryptoBureauInterface = new ethers.utils.Interface(CryptoBureau.abi);
 const SismoHelperInterface = new ethers.utils.Interface(SismoHelper.abi);
 const TrueLayerHelperInterface = new ethers.utils.Interface(TrueLayerHelper.abi);
+const PolygonHelperInterface = new ethers.utils.Interface(PolygonHelper.abi);
 const ZKVerifierInterface = new ethers.utils.Interface(Verifier.abi);
 const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
 const ERC20Interface = new ethers.utils.Interface(IERC20.abi);
@@ -44,6 +46,15 @@ export async function getTrueLayerHelper(provider: SignerOrProvider): Promise<Co
     provider,
   );
   return trueLayerHelper;
+}
+
+export async function getPolygonHelper(provide: SignerOrProvider): Promise<Contract> {
+  const polygonHelper = new ethers.Contract(
+    POLYGON_HELPER_ADDRESS,
+    PolygonHelperInterface,
+    provide,
+  );
+  return polygonHelper;
 }
 
 export async function getZKVerifier(provider: SignerOrProvider): Promise<Contract> {
