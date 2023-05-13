@@ -22,8 +22,6 @@ const CryptoBureauInterface = new ethers.utils.Interface(CryptoBureau.abi);
 const TrueLayerHelperInterface = new ethers.utils.Interface(TrueLayerHelper.abi);
 const ZKVerifierInterface = new ethers.utils.Interface(Verifier.abi);
 const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
-// const WorldIdHelperInterface = new ethers.utils.Interface(WorldIdHelper.abi);
-
 const ERC20Interface = new ethers.utils.Interface(IERC20.abi);
 
 export async function getCryptoBureau(provider: Provider): Promise<Contract> {
