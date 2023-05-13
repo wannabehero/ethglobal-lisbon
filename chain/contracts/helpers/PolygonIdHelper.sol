@@ -50,7 +50,7 @@ contract PolygonIdHelper is Helper, ZKPVerifier {
     }
 
     /// @dev due to the bug with PolygonID app it only works with `name()`
-    function name() public view returns (string memory) {
+    function name() public pure returns (string memory) {
         return "CryptoBureau";
     }
 }
