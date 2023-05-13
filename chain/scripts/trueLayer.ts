@@ -13,7 +13,7 @@ async function main() {
     multiplier: 2,
   });
 
-  console.log("TrueLayerHelper deployed to:", bureau.address);
+  console.log("TrueLayerHelper deployed to:", helper.address);
 }
 
 main().catch((error) => {
