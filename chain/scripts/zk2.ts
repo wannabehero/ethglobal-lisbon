@@ -27,7 +27,7 @@ async function zokratesCmd(cmd: string) {
 
 async function checkVerifier() {
   const income = 210;
-  const target = 100;
+  const target = 200;
 
   const address = "0xE432a8314d971441Ad7700e8b45d66cC326CE517";
 
@@ -36,16 +36,18 @@ async function checkVerifier() {
 
   const { proof } = JSON.parse(fs.readFileSync(`./circuits/${address}.proof.json`).toString('utf-8'));
 
-  const verifier = await deploy();
+  // const verifier = await deploy();
+  const verifier = await ethers.getContractAt("Verifier", "0x88Efb8d5473f39C37B1E6Db5f63d7d99cC57708c");
 
   console.log(await verifier.verifyTx(proof as any, [target]));
 }
 
 async function checkProof() {
-  const proof = {"a":["0x2bbc231ef22ef5a5017c6be73225e146f5391825eca4e020ae3f136a84287287","0x076a9ecb98421a7a5756649be22c886285893a0380f91406059cef2379341d6a"],"b":[["0x0256d006968948c0f85617282211bbe87a2e37fbbaf586c4d5d5fdcb8743377d","0x0a28e81cab9ee87d5415456a3f32ecb7683fcc01a9550abf1bf706d014489ef6"],["0x20aa85f7b11382faff7240de38e8cc7ca9aa502c8a9de63c005bc9591805e3f8","0x24ede656d8cd4dcf4642ba03de3e2009a0390f7a3498940c2a05e4d8f1999427"]],"c":["0x1e4294d0fbb6a96c7543da66d7b1fa250f54c0c1ff2ea160879570d8710c3ed8","0x21a7e11efae7f7b42dbd3aac3450b92226e2634903879d12e984b2757f7f913b"]};
-  const verifier = await deploy();
+  const proof = {"a":["0x253b0a594a0486fc087b0978c253dd6b6a3702655cc940442c8415dc9288912c","0x20121d5bc65386651ce3e1b5c74307ad206a3af00f9c19c3d3eba229e8b4120b"],"b":[["0x11d6e0725c6d537e7c084e5ecf111c3c3aa372b56a8e49efe7b8f75897052041","0x272329352cc982343f4c1bbe2c71827c8b9dfbe77cd4dde5bda598741cbe4333"],["0x19a1a646467bdf9374d6bbd3b15a277d973165f382b0eb6299f094de0943a384","0x08718bd4465a6889cf5e3c0202a96a540dd6164dbfbce0ee15fc278b7af134ce"]],"c":["0x185ca8aae9b8eb58f01ec8550f3c0b6243f2fa29422ed15206738e62e8924c2f","0x1a4b1497d85755806a4e6fd5c78b8fdddc6e92fed635026cb2d65056d6b99f54"]};
+  // const verifier = await deploy();
+  const verifier = await ethers.getContractAt("Verifier", "0x88Efb8d5473f39C37B1E6Db5f63d7d99cC57708c");
 
-  console.log(await verifier.verifyTx(proof as any, [100]));
+  console.log(await verifier.verifyTx(proof as any, [200]));
 }
 
 checkProof().catch((error) => {

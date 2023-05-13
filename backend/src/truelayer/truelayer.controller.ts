@@ -24,7 +24,7 @@ export class TruelayerController {
     const totalBalance = await this.svc.getTotalBalance(accessToken);
     this.logger.log(`Total balance: ${totalBalance}`);
 
-    const target = 100;
+    const target = 200;
 
     try {
       const proof = await this.zk.generateProof(
