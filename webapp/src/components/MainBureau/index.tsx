@@ -6,11 +6,12 @@ import { IClaimHelperItem } from './interfaces';
 import { LENDER_ADDRESS } from '../../web3/consts';
 import TokenValueInput from '../TokenValueInput/TokenValueInput';
 import { useHelperClaims } from './hooks';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import useContract from '../../hooks/useContract';
 import { getERC20Lender, getERCTokenContract } from '../../web3/contracts';
 import { BigNumber, ethers } from 'ethers';
 import { ERC20Contract } from '../../web3/types';
+import { bnToScore } from '../../utils';
 
 const claimsData: IClaimHelperItem[] = [
   {
@@ -156,6 +157,13 @@ export default function MainBureau() {
     }
   };
 
+  const availableToBorrow = useMemo(() => {
+    if (collateralCoef.isZero() || collateralBalance.isZero()) {
+      return BigNumber.from(0);
+    }
+    return collateralBalance.mul(ethers.utils.parseEther('1')).div(collateralCoef);
+  }, [collateralBalance, collateralCoef]);
+
   return (
     <div className="content-inner">
       {!address && <Typography.Title level={3}> Please connect your wallet </Typography.Title>}
@@ -164,8 +172,8 @@ export default function MainBureau() {
           <Descriptions.Item label="Address">
             {address}
           </Descriptions.Item>
-          <Descriptions.Item label="Base Score">{creditScore}</Descriptions.Item>
-          <Descriptions.Item label="Collateral coef">{collateralCoef}</Descriptions.Item>
+          <Descriptions.Item label="Base Score">{bnToScore(creditScore, 4)}</Descriptions.Item>
+          <Descriptions.Item label="Collateral coef">{bnToScore(collateralCoef, 4)}</Descriptions.Item>
           <Descriptions.Item label="Score Goals" span={3}>
             <List
               grid={{ gutter: 16, column: 4 }}
@@ -185,17 +193,24 @@ export default function MainBureau() {
             {
               collateral && (
                 <Typography.Paragraph>
-                  Balance: {ethers.utils.formatEther(collateralTokenBalance)} {collateralSymbol}
+                  {ethers.utils.formatEther(collateralTokenBalance)} {collateralSymbol}
                 </Typography.Paragraph>
               )
             }
             {
               lending && (
                 <Typography.Paragraph>
-                  Balance: {ethers.utils.formatEther(lendingTokenBalance)} {lendingSymbol}
+                  {ethers.utils.formatEther(lendingTokenBalance)} {lendingSymbol}
                 </Typography.Paragraph>
               )
             }
+            {
+                collateralCoef && (
+                  <Typography.Paragraph>
+                    Available to borrow: {bnToScore(availableToBorrow, 4)} {lendingSymbol}
+                  </Typography.Paragraph>
+                )
+              }
           </Descriptions.Item>
           <Descriptions.Item label="Debt">
             <Space direction='vertical'>
