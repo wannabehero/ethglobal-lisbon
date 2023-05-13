@@ -5,7 +5,9 @@ import "@sismo-core/sismo-connect-solidity/contracts/libs/SismoLib.sol";
 import { Bureau } from "../base/Bureau.sol";
 import { Helper } from "../base/Helper.sol";
 
-contract CismoHelper is Helper, SismoConnect {
+contract SismoHelper is Helper, SismoConnect {
+    event ProofAccepted(address indexed sender, uint256 indexed id);
+
     error InvalidProof();
 
     constructor(Bureau bureau_, bytes16 appId_)
@@ -16,15 +18,15 @@ contract CismoHelper is Helper, SismoConnect {
     function verify(bytes16 groupId, bytes memory proof) external {
         SismoConnectVerifiedResult memory result = verify({
             responseBytes: proof,
-            auth: buildAuth({authType: AuthType.VAULT}),
-            claim: buildClaim({groupId: groupId}),
-            signature: buildSignature({message: abi.encode(_msgSender())})
+            claim: buildClaim({groupId: groupId})
         });
 
         if (result.claims.length == 0) {
             revert InvalidProof();
         }
 
-        _bureau.verify(_msgSender());
+        // _bureau.verify(_msgSender());
+
+        emit ProofAccepted(_msgSender(), result.claims[0].proofId);
     }
 }
