@@ -25,7 +25,7 @@ contract SismoHelper is Helper, SismoConnect {
             revert InvalidProof();
         }
 
-        // _bureau.verify(_msgSender());
+        _bureau.verify(_msgSender());
 
         emit ProofAccepted(_msgSender(), result.claims[0].proofId);
     }

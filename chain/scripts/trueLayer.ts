@@ -1,16 +1,17 @@
 import { ethers } from "hardhat";
+import { LATEST_BUREAU, ZK_VERIFIER } from "./const";
 
 async function main() {
-  const bureau = await ethers.getContractAt("CryptoBureau", "0xd8A8C4BB1eb794892e8DD64776A627b8a5EE7d1a");
+  const bureau = await ethers.getContractAt("CryptoBureau", LATEST_BUREAU);
   const TrueLayerHelper = await ethers.getContractFactory("TrueLayerHelper");
   const helper = await TrueLayerHelper.deploy(
     bureau.address,
-    "0x88Efb8d5473f39C37B1E6Db5f63d7d99cC57708c"
+    ZK_VERIFIER
   );
   await helper.deployed();
 
   await bureau.setHelper(helper.address, {
-    multiplier: 2,
+    multiplier: ethers.utils.parseEther("2"),
   });
 
   console.log("TrueLayerHelper deployed to:", helper.address);

@@ -8,8 +8,7 @@ export const query = {
     reason: "for Credit Score verification",
     transaction_data: {
       contract_address:
-        // "0x533f0190046430F7C72E49976774b6A7C192b518", // kyc
-        "0x0d25010ad1aDF3C0439df62281452Db6393A0973", // gpa
+        "0x0454Bc19ce5016ffbA03adDC99D1Aae94EAd0e3d", // gpa
       method_id: "b68967e2",
       chain_id: 80001,
       network: "polygon-mumbai"
@@ -21,7 +20,6 @@ export const query = {
         query: {
           allowedIssuers: ["*"],
           context:
-            // "https://raw.githubusercontent.com/iden3/claim-schema-vocab/main/schemas/json-ld/kyc-v3.json-ld",
             "https://raw.githubusercontent.com/wannabehero/ethglobal-lisbon/main/chain/id/diploma.jsonld",
           credentialSubject: {
             gpaScore: {

@@ -1,13 +1,13 @@
-# Sample Hardhat Project
+# CryptoBureau
 
-This project demonstrates a basic Hardhat use case. It comes with a sample contract, a test for that contract, and a script that deploys that contract.
+```
+npx hardhat run scripts/bureau.ts --network mumbai
+```
 
-Try running some of the following tasks:
+Put address to scripts/consts.ts
 
-```shell
-npx hardhat help
-npx hardhat test
-REPORT_GAS=true npx hardhat test
-npx hardhat node
-npx hardhat run scripts/deploy.ts
+```
+npx hardhat run scripts/trueLayer.ts --network mumbai
+npx hardhat run scripts/sismo.ts --network mumbai
+npx hardhat run scripts/polygonId.ts --network mumbai
 ```

@@ -1,0 +1,4 @@
+export const LATEST_BUREAU = '0x92F9d250CB289b57eb0cF0A3b2ec4d5f649a7A79';
+export const ZK_VERIFIER = '0x88Efb8d5473f39C37B1E6Db5f63d7d99cC57708c';
+
+export const SISMO_APP_ID = '0x2d50ca0a1c74f4c2a562a2755b1bb6f0';
