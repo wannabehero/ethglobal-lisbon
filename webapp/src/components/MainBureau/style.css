@@ -1,0 +1,11 @@
+.content-inner {
+  padding: 32px;
+  background-color: white;
+  border-radius: 12px;
+}
+
+@media screen and (max-width: 768px) {
+  .content-inner {
+    padding: 16px;
+  }
+}
