@@ -1,0 +1,4 @@
+def main(private field income, field target) {
+    assert(income >= target);
+    return;
+}
