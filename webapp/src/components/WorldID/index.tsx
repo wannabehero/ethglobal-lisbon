@@ -1,4 +1,4 @@
-import { CredentialType, ISuccessResult, IDKitWidget } from '@worldcoin/idkit';
+import { CredentialType, ISuccessResult, IDKitWidget, solidityEncode } from '@worldcoin/idkit';
 import { message, Button } from 'antd';
 import { BigNumberish, ContractTransaction } from 'ethers';
 import { useCallback, useState } from 'react';
@@ -84,8 +84,8 @@ export default function WorldIDBody() {
 
   return (
     <IDKitWidget
-      action={'register'}
-      signal={'0x3C9Fd1778463066a8614B2B2F7CfBdf5491F4875'}
+      action={WORLD_ID_APP_ACTION}
+      signal={solidityEncode(['address'], [address || WORLD_ID_APP_SIGNAL])}
       onSuccess={onSuccessWorldID}
       // handleVerify={handleProof}
       app_id={WORLD_ID_APP_ID}
