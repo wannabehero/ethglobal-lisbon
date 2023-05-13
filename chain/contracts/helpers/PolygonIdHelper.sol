@@ -11,7 +11,7 @@ import "./xPolygonID/interfaces/ICircuitValidator.sol";
 contract PolygonIdHelper is Helper, ZKPVerifier {
     event ProofAccepted(address indexed sender, uint256 indexed id);
 
-    uint64 public constant VERIFY_REQUEST_ID = 13;
+    uint64 public constant VERIFY_REQUEST_ID = 1;
 
     mapping (uint256 => address) private _submittedProofs;
 
@@ -47,5 +47,10 @@ contract PolygonIdHelper is Helper, ZKPVerifier {
 
             emit ProofAccepted(_msgSender(), id);
         }
+    }
+
+    /// @dev due to the bug with PolygonID app it only works with `name()`
+    function name() public pure returns (string memory) {
+        return "CryptoBureau";
     }
 }

@@ -9,6 +9,7 @@ import {
   SismoConnect,
 } from '@sismo-core/sismo-connect-client';
 import WorldIDBody from '../WorldID';
+import PolygonID from '../PolygonID';
 
 export default function ClaimHelperCard(item: IClaimHelperItem) {
   const onSismoProofRequest = async () => {
@@ -39,6 +40,13 @@ export default function ClaimHelperCard(item: IClaimHelperItem) {
           <Button shape="round" onClick={onSismoProofRequest}>
             Proof Noun Ownership
           </Button>
+        );
+      }
+      break;
+    case 'polygon-id':
+      {
+        component = (
+          <PolygonID />
         );
       }
       break;

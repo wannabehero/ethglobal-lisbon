@@ -20,9 +20,6 @@ async function deploy() {
 
 async function main() {
   const helper = await deploy();
-  // const helper = await ethers.getContractAt("SismoHelper", "0x66C7a6eCb824F46B23CBaDFb5107cc06f4940288");
-  // const helper = await ethers.getContractAt("SismoHelper", "0xDd446a5C67706777AEC528c16A70257CDDA4939e");
-  // const helper = await ethers.getContractAt("SismoHelper", "0xC9d7bfBCAEC171D51812160e317Cd5696D08AB2B");
 
   const tx = await helper.verify(
     "0x8b64c959a715c6b10aa8372100071ca7",
