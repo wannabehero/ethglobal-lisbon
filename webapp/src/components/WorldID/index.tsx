@@ -70,7 +70,7 @@ export default function WorldID({ verified, onSuccess }: WorldIDProps) {
     <>
       {(verified || isSuccess) && (
         <Tag icon={<CheckCircleOutlined />} color="success">
-          Humanity Verified!
+          Sapiens enough
         </Tag>
       )}
       {!(verified || isSuccess) && (

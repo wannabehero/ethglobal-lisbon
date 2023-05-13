@@ -31,7 +31,7 @@ export default function ClaimHelperCard({ item, onSuccess }: ClaimHelperCardProp
       break;
     case 'polygon-id':
       {
-        component = <PolygonID />;
+        component = <PolygonID verified={item.verified} onSuccess={onSuccess} />;
       }
       break;
     default:

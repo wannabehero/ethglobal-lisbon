@@ -1,8 +1,17 @@
-import { App, Button, QRCode } from 'antd';
+import { App, Button, QRCode, Tag } from 'antd';
+import { CheckCircleOutlined } from '@ant-design/icons';
 import { query } from './query';
+import { useState } from 'react';
 
-const PolygonID = () => {
+interface PolygonIDProps {
+  verified: boolean;
+  onSuccess: () => void;
+}
+
+const PolygonID = ({ verified, onSuccess }: PolygonIDProps) => {
   const { modal } = App.useApp();
+
+  const [isSuccess, setIsSuccess] = useState(false);
 
   const qr = (
     <QRCode
@@ -28,9 +37,19 @@ const PolygonID = () => {
   };
 
   return (
-    <Button shape="round" onClick={onProof}>
-      Proof GPA Score
-    </Button>
+    <>
+    {
+      (verified || isSuccess) ? (
+        <Tag icon={<CheckCircleOutlined />} color="success">
+          Educated enough
+        </Tag>
+      ) : (
+        <Button shape="round" onClick={onProof}>
+          Prove GPA Score
+        </Button>
+      )
+    }
+    </>
   );
 };
 
