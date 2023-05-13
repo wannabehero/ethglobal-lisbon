@@ -1,30 +1,32 @@
-import { Button, Card, Tag } from 'antd';
+import { Card } from 'antd';
 import { IClaimHelperItem } from '../MainBureau/interfaces';
 import TrueLayerZK from '../TrueLayerZK';
-import { SISMO_CLAIM, SISMO_CONFIG } from './consts';
-import { SismoConnect } from '@sismo-core/sismo-connect-client';
 import WorldIDBody from '../WorldID';
 import PolygonID from '../PolygonID';
-import { CheckCircleOutlined } from '@ant-design/icons';
 import SismoConnectBody from '../SismoConnect';
 
-export default function ClaimHelperCard(item: IClaimHelperItem) {
+interface ClaimHelperCardProps {
+  item: IClaimHelperItem;
+  onSuccess: () => void;
+}
+
+export default function ClaimHelperCard({ item, onSuccess }: ClaimHelperCardProps) {
 
   let component;
   switch (item.cardKey) {
     case 'wc-id':
       {
-        component = <WorldIDBody verified={item.verified} />;
+        component = <WorldIDBody verified={item.verified} onSuccess={onSuccess} />;
       }
       break;
     case 'true-layer':
       {
-        component = <TrueLayerZK />;
+        component = <TrueLayerZK verified={item.verified} onSuccess={onSuccess} />;
       }
       break;
     case 'sismo-noun':
       {
-        component = <SismoConnectBody verified={item.verified} />;
+        component = <SismoConnectBody verified={item.verified} onSuccess={onSuccess} />;
       }
       break;
     case 'polygon-id':

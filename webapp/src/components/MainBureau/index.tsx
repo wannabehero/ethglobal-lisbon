@@ -1,5 +1,5 @@
 import { App, Button, Descriptions, List, Space, Typography } from 'antd';
-import { useAccount, useProvider } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { useCreditScore } from '../../hooks/useCreditScore';
 import ClaimHelperCard from '../ClaimHelperCard';
 import { IClaimHelperItem } from './interfaces';
@@ -47,7 +47,6 @@ export default function MainBureau() {
   const { message } = App.useApp();
   const { helperClaims } = useHelperClaims();
 
-  const provider = useProvider();
   const { address } = useAccount();
 
   const [borrowedBalance, setBorrowedBalance] = useState<BigNumber>(BigNumber.from(0));
@@ -56,7 +55,7 @@ export default function MainBureau() {
   const [lendingTokenBalance, setLendingTokenBalance] = useState<BigNumber>(BigNumber.from(0));
   const [collateralTokenBalance, setCollateralTokenBalance] = useState<BigNumber>(BigNumber.from(0));
 
-  const creditScore = useCreditScore(address, provider);
+  const { creditScore, reloadScore } = useCreditScore();
 
   const { contract: lender } = useContract(LENDER_ADDRESS, getERC20Lender);
   const [collateralAddress, setCollateralAddress] = useState<string>();
@@ -170,7 +169,7 @@ export default function MainBureau() {
                   helperClaims?.find((claim) => claim.id === item.cardKey)?.verified || false;
                 return (
                   <List.Item>
-                    <ClaimHelperCard {...item} />
+                    <ClaimHelperCard item={item} onSuccess={() => reloadScore()} />
                   </List.Item>
                 );
               }}

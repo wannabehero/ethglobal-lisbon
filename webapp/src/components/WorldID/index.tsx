@@ -12,7 +12,12 @@ import { useProvider, useAccount, useSigner } from 'wagmi';
 import { getCryptoBureau } from '../../web3/contracts';
 import { CheckCircleOutlined } from '@ant-design/icons';
 
-export default function WorldIDBody({ verified }: { verified: boolean }) {
+interface WorldIDProps {
+  verified: boolean;
+  onSuccess: () => void;
+}
+
+export default function WorldID({ verified, onSuccess }: WorldIDProps) {
   const provider = useProvider();
   const { address } = useAccount();
   const { data: signer } = useSigner();
@@ -48,6 +53,7 @@ export default function WorldIDBody({ verified }: { verified: boolean }) {
           description: 'Verify World ID',
         });
         await tx.wait();
+        onSuccess();
         setIsSuccess(true);
         message.success('World ID Verified!');
       } catch (err: any) {

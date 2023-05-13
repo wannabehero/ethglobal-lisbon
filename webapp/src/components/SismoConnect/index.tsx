@@ -8,7 +8,12 @@ import { useSigner } from 'wagmi';
 import { getSismoHelper } from '../../web3/contracts';
 import { useSismoConnect } from '@sismo-core/sismo-connect-react';
 
-export default function SismoConnectBody({ verified }: { verified: boolean }) {
+interface SismoConnectProps {
+  verified: boolean;
+  onSuccess: () => void;
+}
+
+export default function SismoConnect({ verified, onSuccess }: SismoConnectProps) {
   const { data: signer } = useSigner();
   const addRecentTransaction = useAddRecentTransaction();
 
@@ -38,7 +43,7 @@ export default function SismoConnectBody({ verified }: { verified: boolean }) {
       console.log(`Sismo transaction responded with: ${receipt}`);
 
       setIsSuccess(true);
-
+      onSuccess();
       message.success('Nouns via Sismo Verified!');
     } catch (err: any) {
       console.log(err);
