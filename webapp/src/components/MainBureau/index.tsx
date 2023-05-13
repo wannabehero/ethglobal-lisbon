@@ -9,7 +9,7 @@ import TokenInfo from '../TokenInfo';
 import { LENDER_ADDRESS } from '../../web3/consts';
 import TokenValueInput from '../TokenValueInput/TokenValueInput';
 import { useHelperClaims } from './hooks';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import useContract from '../../hooks/useContract';
 import { getERC20Lender, getERCTokenContract } from '../../web3/contracts';
 import { BigNumber, ethers } from 'ethers';
@@ -92,14 +92,24 @@ export default function MainBureau() {
 
   const [isLoadingButtons, setIsLoadingButtons] = useState<boolean>(false);
 
+  const updateLenderBalances = useCallback(async () => {
+    if (!lender || !address) {
+      return;
+    }
+    await Promise.all([
+      lender.collateralBalance(address).then(setCollateralBalance),
+      lender.borrowedBalance(address).then(setBorrowedBalance)
+    ]);
+  }, [lender, address]);
+
+
   useEffect(() => {
     if (!lender || !address) {
       return;
     }
     lender.LENDING_TOKEN().then(setLendingAddress);
     lender.COLLATERAL_TOKEN().then(setCollateralAddress);
-    lender.collateralBalance(address).then(setCollateralBalance);
-    lender.borrowedBalance(address).then(setBorrowedBalance);
+    updateLenderBalances();
   }, [lender, setLendingAddress, setCollateralAddress, address]);
 
   useEffect(() => {
@@ -123,11 +133,23 @@ export default function MainBureau() {
       setIsLoadingButtons(true);
       const tx = await token.approve(LENDER_ADDRESS, ethers.constants.MaxUint256);
       await tx.wait();
+      message.success('Approved!');
       callback();
     } catch (e: any) {
       message.error(e.reason ?? e.message);
     } finally {
       setIsLoadingButtons(false);
+    }
+  };
+
+  const onLenderAction = async (action: () => Promise<any>, description: string) => {
+    try {
+      const tx = await action();
+      await tx.wait();
+      await updateLenderBalances();
+      message.success(description);
+    } catch (e: any) {
+      message.error(e.reason ?? e.message);
     }
   };
 
@@ -176,17 +198,23 @@ export default function MainBureau() {
               <Typography.Paragraph>
                 Current value: {ethers.utils.formatEther(borrowedBalance)} {lendingSymbol}
               </Typography.Paragraph>
-              <TokenValueInput
-                action='Borrow'
-                symbol={lendingSymbol}
-                onAction={(value) => console.log(value)}
-              />
-              <TokenValueInput
-                action='Repay'
-                symbol={lendingSymbol}
-                onAction={(value) => console.log(value)}
-              />
-               {
+              {
+                lender && (
+                  <>
+                    <TokenValueInput
+                      action='Borrow'
+                      symbol={lendingSymbol}
+                      onAction={(value) => onLenderAction(() => lender.borrow(ethers.BigNumber.from(value)), 'Borrowed!')}
+                    />
+                    <TokenValueInput
+                      action='Repay'
+                      symbol={lendingSymbol}
+                      onAction={(value) => onLenderAction(() => lender.repay(ethers.BigNumber.from(value)), 'Repaid!')}
+                    />
+                  </>
+                )
+              }
+              {
                 lending && showApproveLending && (
                   <Button
                     loading={isLoadingButtons}
@@ -205,16 +233,22 @@ export default function MainBureau() {
               <Typography.Paragraph>
                 Current value: {ethers.utils.formatEther(collateralBalance)} {collateralSymbol}
               </Typography.Paragraph>
-              <TokenValueInput
-                action='Increase'
-                symbol={collateralSymbol}
-                onAction={(value) => console.log(value)}
-              />
-              <TokenValueInput
-                action='Withdraw'
-                symbol={collateralSymbol}
-                onAction={(value) => console.log(value)}
-              />
+              {
+                lender && (
+                  <>
+                  <TokenValueInput
+                    action='Increase'
+                    symbol={collateralSymbol}
+                    onAction={(value) => onLenderAction(() => lender.increaseCollateral(ethers.BigNumber.from(value)), 'Increased collateral!')}
+                  />
+                  <TokenValueInput
+                    action='Withdraw'
+                    symbol={collateralSymbol}
+                    onAction={(value) => onLenderAction(() => lender.decreaseCollateral(ethers.BigNumber.from(value)), 'Decreased collateral!')}
+                  />
+                  </>
+                )
+              }
               {
                 collateral && showApproveCollateral && (
                   <Button
