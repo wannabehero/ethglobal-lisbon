@@ -4,7 +4,7 @@ import { Signer, providers } from 'ethers';
 import { AnyContract } from '../web3/types';
 
 const useContract = <C extends AnyContract,>(
-  address: string,
+  address: string | undefined,
   loader: (address: string, signerOrProvider: Signer | providers.Provider) => Promise<C>
 ) => {
   const provider = useProvider();
@@ -12,12 +12,12 @@ const useContract = <C extends AnyContract,>(
   const [contract, setContract] = useState<C | null>(null);
 
   useEffect(() => {
-    if (!provider && !signer) {
+    if (!provider && !signer || !address) {
       return;
     }
     loader(address, signer ?? provider)
       .then(setContract);
-  }, [provider, signer, setContract]);
+  }, [provider, signer, address, setContract]);
 
   return { contract };
 };

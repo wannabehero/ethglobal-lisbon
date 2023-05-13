@@ -6,8 +6,8 @@ async function main() {
   const Lender = await ethers.getContractFactory("ERC20Lender");
   const lender = await Lender.deploy(
     bureau.address,
-    DAI,
-    jEUR
+    jEUR,
+    DAI
   );
 
   console.log("ERC20Lender deployed to:", lender.address);

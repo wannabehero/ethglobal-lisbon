@@ -6,9 +6,13 @@ import { IClaimHelperItem } from './interfaces';
 import { SismoConnect } from '@sismo-core/sismo-connect-client';
 import { SISMO_CONFIG } from '../ClaimHelperCard/consts';
 import TokenInfo from '../TokenInfo';
-import { DAI, jEUR } from '../../web3/consts';
+import { LENDER_ADDRESS } from '../../web3/consts';
 import TokenValueInput from '../TokenValueInput/TokenValueInput';
 import { useHelperClaims } from './hooks';
+import { useEffect, useState } from 'react';
+import useContract from '../../hooks/useContract';
+import { getERC20Lender, getERCTokenContract } from '../../web3/contracts';
+import { BigNumber, ethers } from 'ethers';
 
 const claimsData: IClaimHelperItem[] = [
   {
@@ -50,11 +54,8 @@ export default function MainBureau() {
   const provider = useProvider();
   const { address } = useAccount();
 
-  // TODO: pull from smart contract
-  const borrowedBalance = 0;
-
-  // TODO: pull from smart contract
-  const collateralBalance = 150;
+  const [borrowedBalance, setBorrowedBalance] = useState<BigNumber>(BigNumber.from(0));
+  const [collateralBalance, setCollateralBalance] = useState<BigNumber>(BigNumber.from(0));
 
   const creditScore = useCreditScore(address, provider);
 
@@ -76,16 +77,39 @@ export default function MainBureau() {
     }
   }
 
-  // const [value, setValue] = useState<string>('');
-  // const [symbol, setSymbol] = useState<string>('');
-  // const { contract } = useContract(token, getERCTokenContract);
+  const { contract: lender } = useContract(LENDER_ADDRESS, getERC20Lender);
+  const [collateralAddress, setCollateralAddress] = useState<string>();
+  const [lendingAddress, setLendingAddress] = useState<string>();
 
-  // useEffect(() => {
-  //   if (!contract) {
-  //     return;
-  //   }
-  //   contract.symbol().then(setSymbol);
-  // }, [contract]);
+  const { contract: collateral } = useContract(collateralAddress, getERCTokenContract);
+  const { contract: lending } = useContract(lendingAddress, getERCTokenContract);
+
+  const [collateralSymbol, setCollateralSymbol] = useState<string>('');
+  const [lendingSymbol, setLendingSymbol] = useState<string>('');
+
+  useEffect(() => {
+    if (!lender || !address) {
+      return;
+    }
+    lender.LENDING_TOKEN().then(setLendingAddress);
+    lender.COLLATERAL_TOKEN().then(setCollateralAddress);
+    lender.collateralBalance(address).then(setCollateralBalance);
+    lender.borrowedBalance(address).then(setBorrowedBalance);
+  }, [lender, setLendingAddress, setCollateralAddress, address]);
+
+  useEffect(() => {
+    if (!lending) {
+      return;
+    }
+    lending.symbol().then(setLendingSymbol);
+  }, [lending]);
+
+  useEffect(() => {
+    if (!collateral) {
+      return;
+    }
+    collateral.symbol().then(setCollateralSymbol);
+  }, [collateral]);
 
   return (
     <div className="content-inner">
@@ -116,35 +140,47 @@ export default function MainBureau() {
             />
           </Descriptions.Item>
           <Descriptions.Item label="Wallet">
-            <TokenInfo token={DAI} />
-            <TokenInfo token={jEUR} />
+            {
+              collateral && (
+                <TokenInfo contract={collateral} symbol={collateralSymbol} />
+              )
+            }
+            {
+              lending && (
+                <TokenInfo contract={lending} symbol={lendingSymbol} />
+              )
+            }
           </Descriptions.Item>
           <Descriptions.Item label="Debt">
             <Space direction='vertical'>
-              {borrowedBalance}
+              <Typography.Paragraph>
+                Current value: {ethers.utils.formatEther(borrowedBalance)} {lendingSymbol}
+              </Typography.Paragraph>
               <TokenValueInput
                 action='Borrow'
-                symbol='jEUR'
+                symbol={lendingSymbol}
                 onAction={(value) => console.log(value)}
               />
               <TokenValueInput
                 action='Repay'
-                symbol='jEUR'
+                symbol={lendingSymbol}
                 onAction={(value) => console.log(value)}
               />
             </Space>
           </Descriptions.Item>
           <Descriptions.Item label="Collateral">
             <Space direction='vertical'>
-              {collateralBalance}
+              <Typography.Paragraph>
+                Current value: {ethers.utils.formatEther(collateralBalance)} {collateralSymbol}
+              </Typography.Paragraph>
               <TokenValueInput
                 action='Increase'
-                symbol='DAI'
+                symbol={collateralSymbol}
                 onAction={(value) => console.log(value)}
               />
               <TokenValueInput
                 action='Withdraw'
-                symbol='DAI'
+                symbol={collateralSymbol}
                 onAction={(value) => console.log(value)}
               />
             </Space>
