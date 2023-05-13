@@ -24,11 +24,11 @@ export class ZkService {
           cwd: '../chain/circuits',
         },
         (error, stdout, stderr) => {
-          this.logger.log(stdout);
-          this.logger.error(stderr);
           if (error) {
+            this.logger.error(stderr);
             reject(error);
           } else {
+            this.logger.log(stdout);
             resolve(0);
           }
         },

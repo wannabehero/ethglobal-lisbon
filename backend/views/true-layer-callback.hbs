@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>ZK TrueLayer</title>
+  </head>
+  <body>
+    {{ message }}
+  </body>
+  <script>
+    function sendCallback() {
+      const data = {{{ proof }}};
+      window.opener.postMessage(data, "http://localhost:5173/");
+      window.close();
+    }
+
+    sendCallback();
+  </script>
+</html>

@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, Logger, Query, Redirect } from '@nestjs/common';
+import { Controller, Get, HttpException, Logger, Query, Redirect, Render } from '@nestjs/common';
 import { TruelayerService } from './truelayer.service';
 import { ZkService } from '../zk/zk.service';
 
@@ -19,6 +19,7 @@ export class TruelayerController {
   }
 
   @Get('/callback')
+  @Render('true-layer-callback.hbs')
   async callback(@Query('code') code: string) {
     const accessToken = await this.svc.getAccessToken(code);
     const totalBalance = await this.svc.getTotalBalance(accessToken);
@@ -32,7 +33,10 @@ export class TruelayerController {
         totalBalance,
         target,
       );
-      return proof;
+      return {
+        proof: JSON.stringify(proof),
+        message: '✅ Proof has been generated successfully!',
+      };
     } catch (err) {
       this.logger.error(err);
       throw new HttpException(`Invalid proof: ${totalBalance} >= ${target} `, 400);

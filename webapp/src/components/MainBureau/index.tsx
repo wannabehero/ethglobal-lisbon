@@ -26,7 +26,7 @@ export default function MainBureau() {
     },
     {
       cardKey: 'true-layer',
-      label: 'Proof of Funds',
+      label: 'ZK Proof of Funds',
       url: 'https://truelayer.com/',
       scoreRate: '0.2',
       // todo: data to get proof of funds
