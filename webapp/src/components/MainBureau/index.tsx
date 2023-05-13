@@ -1,5 +1,6 @@
 import { Button, Card, Descriptions, List, Typography } from 'antd';
 import { useAccount, useProvider, useSigner } from 'wagmi';
+import { useCreditScore } from '../../hooks/useCreditScore';
 
 export default function MainBureau() {
   const provider = useProvider();
@@ -36,6 +37,8 @@ export default function MainBureau() {
   // TODO: pull from smart contract
   const collateralBalance = 150;
 
+  const creditScore = useCreditScore(address, provider);
+
   return (
     <div className="content-inner">
       {!address && <Typography.Title level={3}> Please connect your wallet </Typography.Title>}
@@ -44,7 +47,7 @@ export default function MainBureau() {
           <Descriptions.Item label="Address" span={2}>
             {address}
           </Descriptions.Item>
-          <Descriptions.Item label="Credit Score">{0}</Descriptions.Item>
+          <Descriptions.Item label="Credit Score">{creditScore}</Descriptions.Item>
           <Descriptions.Item label="Score Goals" span={3}>
             <List
               grid={{ gutter: 16, column: 4 }}
