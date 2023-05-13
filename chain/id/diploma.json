@@ -115,7 +115,6 @@
           "format": "uri"
         },
         "gpaScore": {
-          "title": "GPA Score",
           "type": "integer"
         }
       }
