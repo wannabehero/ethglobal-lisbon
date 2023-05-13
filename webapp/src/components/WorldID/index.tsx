@@ -1,6 +1,6 @@
 import { CredentialType, ISuccessResult, IDKitWidget, solidityEncode } from '@worldcoin/idkit';
-import { message, Button } from 'antd';
-import { BigNumberish, ContractTransaction, ethers } from 'ethers';
+import { message, Button, Tag } from 'antd';
+import { ContractTransaction, ethers } from 'ethers';
 import { useCallback, useState } from 'react';
 import {
   WORLD_ID_APP_ACTION,
@@ -10,8 +10,9 @@ import {
 import { useAddRecentTransaction, useConnectModal } from '@rainbow-me/rainbowkit';
 import { useProvider, useAccount, useSigner } from 'wagmi';
 import { getCryptoBureau } from '../../web3/contracts';
+import { CheckCircleOutlined } from '@ant-design/icons';
 
-export default function WorldIDBody() {
+export default function WorldIDBody({ verified }: { verified: boolean }) {
   const { openConnectModal } = useConnectModal();
 
   const provider = useProvider();
@@ -55,13 +56,14 @@ export default function WorldIDBody() {
         const tx: ContractTransaction = await bureau
           .connect(signer)
           .register(result.merkle_root, result.nullifier_hash, unpackedProof);
-          addRecentTransaction({
+        addRecentTransaction({
           hash: tx.hash,
           description: 'Verify World ID',
         });
         const receipt = await tx.wait();
 
-        // TODO: check receipt and trigger stats reload? 
+        // TODO: check receipt and trigger stats reload?
+        setIsVerified(true);
 
         message.success('World ID Verified!');
       } catch (err: any) {
@@ -71,31 +73,34 @@ export default function WorldIDBody() {
         setIsCreating(false);
       }
     },
-    [
-      provider,
-      signer,
-      addRecentTransaction,
-      message,
-      openConnectModal,
-    ],
+    [provider, signer, addRecentTransaction, message, openConnectModal],
   );
 
   return (
-    <IDKitWidget
-      action={WORLD_ID_APP_ACTION}
-      signal={solidityEncode(['address'], [address || WORLD_ID_APP_SIGNAL])}
-      onSuccess={onSuccessWorldID}
-      // handleVerify={handleProof}
-      app_id={WORLD_ID_APP_ID}
-      credential_types={credential_types}
-      // walletConnectProjectId="get_this_from_walletconnect_portal"
-    >
-      {({ open }) => (
-        // TODO: add World ID icon icon={<icon here />}
-        <Button shape="round" onClick={open}>
-          Proof Humanity
-        </Button>
+    <>
+      {verified && (
+        <Tag icon={<CheckCircleOutlined />} color="success">
+          Humanity Verified!
+        </Tag>
       )}
-    </IDKitWidget>
+      {!verified && (
+        <IDKitWidget
+          action={WORLD_ID_APP_ACTION}
+          signal={solidityEncode(['address'], [address || WORLD_ID_APP_SIGNAL])}
+          onSuccess={onSuccessWorldID}
+          // handleVerify={handleProof}
+          app_id={WORLD_ID_APP_ID}
+          credential_types={credential_types}
+          // walletConnectProjectId="get_this_from_walletconnect_portal"
+        >
+          {({ open }) => (
+            // TODO: add World ID icon icon={<icon here />}
+            <Button shape="round" onClick={open}>
+              Proof Humanity
+            </Button>
+          )}
+        </IDKitWidget>
+      )}
+    </>
   );
 }

@@ -1,32 +1,20 @@
-import { Button, Card } from 'antd';
+import { Button, Card, Tag } from 'antd';
 import { IClaimHelperItem } from '../MainBureau/interfaces';
 import TrueLayerZK from '../TrueLayerZK';
-import {
-  SISMO_CLAIM,
-  SISMO_CONFIG,
-} from './consts';
-import {
-  SismoConnect,
-} from '@sismo-core/sismo-connect-client';
+import { SISMO_CLAIM, SISMO_CONFIG } from './consts';
+import { SismoConnect } from '@sismo-core/sismo-connect-client';
 import WorldIDBody from '../WorldID';
 import PolygonID from '../PolygonID';
+import { CheckCircleOutlined } from '@ant-design/icons';
+import SismoConnectBody from '../SismoConnect';
 
 export default function ClaimHelperCard(item: IClaimHelperItem) {
-  const onSismoProofRequest = async () => {
-    // create a new SismoConnect instance with the client configuration
-    const sismoConnect = SismoConnect(SISMO_CONFIG);
-    localStorage.setItem('sismo-connect', '');
-    // The `request` function sends your user to the Sismo Vault App
-    // to generate the proof of group membership
-    // After the proof generation, the user is redirected with it to your app
-    sismoConnect.request({ claim: SISMO_CLAIM });
-  };
 
   let component;
   switch (item.cardKey) {
     case 'wc-id':
       {
-        component = <WorldIDBody />;
+        component = <WorldIDBody verified={item.verified} />;
       }
       break;
     case 'true-layer':
@@ -36,18 +24,12 @@ export default function ClaimHelperCard(item: IClaimHelperItem) {
       break;
     case 'sismo-noun':
       {
-        component = (
-          <Button shape="round" onClick={onSismoProofRequest}>
-            Proof Noun Ownership
-          </Button>
-        );
+        component = <SismoConnectBody verified={item.verified} />;
       }
       break;
     case 'polygon-id':
       {
-        component = (
-          <PolygonID />
-        );
+        component = <PolygonID />;
       }
       break;
     default:

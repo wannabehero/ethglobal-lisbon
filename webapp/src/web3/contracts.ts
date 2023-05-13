@@ -12,6 +12,7 @@ import {
 } from './consts';
 import { provider } from './wallet';
 import { HelperClaim } from '../components/MainBureau/hooks';
+import { ScoreDate } from './types';
 
 export type Provider = ethers.providers.Provider;
 export type Signer = ethers.Signer;
@@ -45,14 +46,20 @@ export async function getZKVerifier(providerOrSigner: Provider | Signer): Promis
   return zkVerifier;
 }
 
-export async function getScoreData(address: string, provider: Provider): Promise<BigNumber> {
+export async function getScoreData(address: string, provider: Provider): Promise<ScoreDate> {
   const bureau = await getCryptoBureau(provider);
   try {
     const scoreData = await bureau.scoreData(address);
     return scoreData;
   } catch (e) {
     console.log(e);
-    return BigNumber.from(0);
+    return {
+      verified: false,
+      base: BigNumber.from(0),
+      totalBorrowed: BigNumber.from(0),
+      totalRepaid: BigNumber.from(0),
+      totalCollateral: BigNumber.from(0),
+    };
   }
 }
 

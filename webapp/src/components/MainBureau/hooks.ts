@@ -19,6 +19,7 @@ export const useHelperClaims = () => {
     try {
       const claims = await getHelperClaims(address, provider);
       setHelperClaims(claims);
+      console.log(`Loaded claims: ${JSON.stringify(claims)}`);
     } catch (e) {
       console.error(e);
     } finally {
