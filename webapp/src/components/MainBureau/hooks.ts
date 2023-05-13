@@ -12,25 +12,23 @@ export const useHelperClaims = () => {
   const { address } = useAccount();
 
   const [helperClaims, setHelperClaims] = useState<HelperClaim[]>();
-  const [isLoading, setIsLoading] = useState(false);
 
-  const reloadHelperClaims = useCallback(async () => {
-    setIsLoading(true);
+  const reloadHelperClaims = useCallback(async (address: string) => {
     try {
       const claims = await getHelperClaims(address, provider);
       setHelperClaims(claims);
       console.log(`Loaded claims: ${JSON.stringify(claims)}`);
     } catch (e) {
       console.error(e);
-    } finally {
-      setIsLoading(false);
     }
-  }, [setHelperClaims, setIsLoading]);
+  }, [setHelperClaims, provider]);
 
   useEffect(() => {
-    reloadHelperClaims();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    if (!address) {
+      return;
+    }
+    reloadHelperClaims(address);
+  }, [address]);
 
-  return { helperClaims, isLoading, reloadHelperClaims };
+  return { helperClaims, reloadHelperClaims };
 };

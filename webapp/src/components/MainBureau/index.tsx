@@ -1,4 +1,4 @@
-import { App, Button, Descriptions, List, Result, Space, Spin, Typography } from 'antd';
+import { App, Button, Descriptions, List, Space, Typography } from 'antd';
 import { useAccount, useProvider } from 'wagmi';
 import { useCreditScore } from '../../hooks/useCreditScore';
 import ClaimHelperCard from '../ClaimHelperCard';
@@ -45,9 +45,7 @@ const claimsData: IClaimHelperItem[] = [
 
 export default function MainBureau() {
   const { message } = App.useApp();
-  const { helperClaims, isLoading, reloadHelperClaims } = useHelperClaims();
-
-  const reloadButton = <Button onClick={reloadHelperClaims}>Reload</Button>;
+  const { helperClaims } = useHelperClaims();
 
   const provider = useProvider();
   const { address } = useAccount();
@@ -156,17 +154,13 @@ export default function MainBureau() {
 
   return (
     <div className="content-inner">
-      {isLoading && <Spin tip="Loading" />}
-      {!isLoading && helperClaims === undefined && (
-        <Result status="error" title="Cannot load markets" extra={reloadButton} />
-      )}
       {!address && <Typography.Title level={3}> Please connect your wallet </Typography.Title>}
       {address && (
         <Descriptions layout="vertical" bordered column={3}>
           <Descriptions.Item label="Address" span={2}>
             {address}
           </Descriptions.Item>
-          <Descriptions.Item label="Credit Score">{creditScore}</Descriptions.Item>
+          <Descriptions.Item label="Base Score">{creditScore}</Descriptions.Item>
           <Descriptions.Item label="Score Goals" span={3}>
             <List
               grid={{ gutter: 16, column: 4 }}
@@ -209,12 +203,12 @@ export default function MainBureau() {
                     <TokenValueInput
                       action='Borrow'
                       symbol={lendingSymbol}
-                      onAction={(value) => onLenderAction(() => lender.borrow(ethers.BigNumber.from(value)), 'Borrowed!')}
+                      onAction={(value) => onLenderAction(() => lender.borrow(ethers.utils.parseEther(value)), 'Borrowed!')}
                     />
                     <TokenValueInput
                       action='Repay'
                       symbol={lendingSymbol}
-                      onAction={(value) => onLenderAction(() => lender.repay(ethers.BigNumber.from(value)), 'Repaid!')}
+                      onAction={(value) => onLenderAction(() => lender.repay(ethers.utils.parseEther(value)), 'Repaid!')}
                     />
                   </>
                 )
@@ -244,12 +238,12 @@ export default function MainBureau() {
                   <TokenValueInput
                     action='Increase'
                     symbol={collateralSymbol}
-                    onAction={(value) => onLenderAction(() => lender.increaseCollateral(ethers.BigNumber.from(value)), 'Increased collateral!')}
+                    onAction={(value) => onLenderAction(() => lender.increaseCollateral(ethers.utils.parseEther(value)), 'Increased collateral!')}
                   />
                   <TokenValueInput
                     action='Withdraw'
                     symbol={collateralSymbol}
-                    onAction={(value) => onLenderAction(() => lender.decreaseCollateral(ethers.BigNumber.from(value)), 'Decreased collateral!')}
+                    onAction={(value) => onLenderAction(() => lender.decreaseCollateral(ethers.utils.parseEther(value)), 'Decreased collateral!')}
                   />
                   </>
                 )

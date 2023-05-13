@@ -18,6 +18,7 @@ import { HelperClaim } from '../components/MainBureau/hooks';
 
 export type Provider = ethers.providers.Provider;
 export type Signer = ethers.Signer;
+export type SignerOrProvider = Provider | Signer;
 
 const CryptoBureauInterface = new ethers.utils.Interface(CryptoBureau.abi);
 const SismoHelperInterface = new ethers.utils.Interface(SismoHelper.abi);
@@ -26,36 +27,36 @@ const ZKVerifierInterface = new ethers.utils.Interface(Verifier.abi);
 const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
 const ERC20Interface = new ethers.utils.Interface(IERC20.abi);
 
-export async function getCryptoBureau(provider: Provider): Promise<Contract> {
+export async function getCryptoBureau(provider: SignerOrProvider): Promise<Contract> {
   const cryptoBureau = new ethers.Contract(CRYPTO_BUREAU_ADDRESS, CryptoBureauInterface, provider);
   return cryptoBureau;
 }
 
-export async function getSismoHelper(provider: Provider): Promise<Contract> {
+export async function getSismoHelper(provider: SignerOrProvider): Promise<Contract> {
   const sismoHelper = new ethers.Contract(SISMO_HELPER_ADDRESS, SismoHelperInterface, provider);
   return sismoHelper;
 }
 
-export async function getTrueLayerHelper(providerOrSigner: Provider | Signer): Promise<Contract> {
+export async function getTrueLayerHelper(provider: SignerOrProvider): Promise<Contract> {
   const trueLayerHelper = new ethers.Contract(
     TRUE_LAYER_HELPER_ADDRESS,
     TrueLayerHelperInterface,
-    providerOrSigner,
+    provider,
   );
   return trueLayerHelper;
 }
 
-export async function getZKVerifier(providerOrSigner: Provider | Signer): Promise<Contract> {
+export async function getZKVerifier(provider: SignerOrProvider): Promise<Contract> {
   const zkVerifier = new ethers.Contract(
     ZK_VERIFIER_ADDRESS,
     ZKVerifierInterface,
-    providerOrSigner,
+    provider,
   );
   return zkVerifier;
 }
 
-export async function getERC20Lender(address: string, providerOrSigner: Provider | Signer): Promise<LenderContract> {
-  const erc20Lender = new ethers.Contract(address, ERC20LenderInterface, providerOrSigner);
+export async function getERC20Lender(address: string, provider: SignerOrProvider): Promise<LenderContract> {
+  const erc20Lender = new ethers.Contract(address, ERC20LenderInterface, provider);
   return erc20Lender;
 }
 

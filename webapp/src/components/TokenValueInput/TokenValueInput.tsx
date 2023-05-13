@@ -20,7 +20,10 @@ const TokenValueInput = ({ symbol, action, onAction }: ContractValueInputProps) 
         suffix={symbol} />
       <Button
         type="primary"
-        onClick={() => onAction(value)}
+        onClick={() => {
+          onAction(value);
+          setValue('');
+        }}
       >
         {action}
       </Button>
