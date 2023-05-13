@@ -1,32 +1,34 @@
 import { Button, Card, Descriptions, List, Typography } from 'antd';
 import { useAccount, useProvider, useSigner } from 'wagmi';
 import { useCreditScore } from '../../hooks/useCreditScore';
+import ClaimHelperCard from '../ClaimHelperCard';
+import { IClaimHelperItem } from './interfaces';
 
 export default function MainBureau() {
   const provider = useProvider();
   const { address } = useAccount();
   const { data: signer } = useSigner();
 
-  const claimsData = [
+  const claimsData: IClaimHelperItem[] = [
     {
-      key: 'wc-id',
+      cardKey: 'wc-id',
       label: 'World ID',
       url: 'https://develop.worldcoin.org/',
-      scoreRate: 0.2,
+      scoreRate: '0.2',
       // todo: data to get proof of identity
     },
     {
-      key: 'sismo-noun',
+      cardKey: 'sismo-noun',
       label: 'Noun owner with Sismo',
       url: 'https://sismo.io/',
-      scoreRate: 0.05,
+      scoreRate: '0.05',
       // todo: data to get proof of ownership
     },
     {
-      key: 'true-layer',
+      cardKey: 'true-layer',
       label: 'Proof of Funds',
       url: 'https://truelayer.com/',
-      scoreRate: 0.2,
+      scoreRate: '0.2',
       // todo: data to get proof of funds
     },
   ];
@@ -54,7 +56,7 @@ export default function MainBureau() {
               dataSource={claimsData}
               renderItem={(item) => (
                 <List.Item>
-                  <Card title={item.label}>// here will be button + score details</Card>
+                  <ClaimHelperCard {...item} />
                 </List.Item>
               )}
             />

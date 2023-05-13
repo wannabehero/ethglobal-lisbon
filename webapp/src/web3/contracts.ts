@@ -9,6 +9,7 @@ export type Signer = ethers.Signer;
 
 const CryptoBureauInterface = new ethers.utils.Interface(CryptoBureau.abi);
 // const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
+// const WorldIdHelperInterface = new ethers.utils.Interface(WorldIdHelper.abi);
 
 export async function getCryptoBureau(provider: Provider): Promise<Contract> {
     const cryptoBureau = new ethers.Contract(CRYPTO_BUREAU_ADDRESS, CryptoBureauInterface, provider);
@@ -25,6 +26,11 @@ export async function getScoreData(address: string, provider: Provider): Promise
         return BigNumber.from(0);
     }
 }
+
+// TODO: add calls to get Helper status for claims
+
+// TODO: add WorldIDHelper call to verify proof
+
 
 // calls to abis
 
