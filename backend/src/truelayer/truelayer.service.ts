@@ -1,11 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Account, ApiResponse, Balance } from './types';
 
-const BASE_URL = 'https://auth.truelayer-sandbox.com';
+const AUTH_BASE_URL = 'https://auth.truelayer-sandbox.com';
+const DATA_BASE_URL = 'https://api.truelayer-sandbox.com';
 
 @Injectable()
 export class TruelayerService {
+  private readonly logger = new Logger(TruelayerService.name);
+
   private clientId: string;
   private clientSecret: string;
   private redirectUri: string;
@@ -24,11 +27,11 @@ export class TruelayerService {
       redirect_uri: this.redirectUri,
       providers: 'uk-cs-mock uk-ob-all uk-oauth-all',
     });
-    return `${BASE_URL}/?${query.toString()}`;
+    return `${AUTH_BASE_URL}/?${query.toString()}`;
   }
 
   async getAccessToken(code: string): Promise<string> {
-    const response = await fetch(`${BASE_URL}/connect/token`, {
+    const response = await fetch(`${AUTH_BASE_URL}/connect/token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -46,7 +49,7 @@ export class TruelayerService {
   }
 
   async getAccounts(accessToken: string): Promise<Account[]> {
-    const response: ApiResponse<Account> = await fetch(`${BASE_URL}/data/v1/accounts`, {
+    const response: ApiResponse<Account> = await fetch(`${DATA_BASE_URL}/data/v1/accounts`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
       },
@@ -57,7 +60,7 @@ export class TruelayerService {
 
   async getAccountBalance(accessToken: string, accountId: string): Promise<number> {
     const response: ApiResponse<Balance> = await fetch(
-      `${BASE_URL}/data/v1/accounts/${accountId}/balance`,
+      `${DATA_BASE_URL}/data/v1/accounts/${accountId}/balance`,
       {
         headers: {
           Authorization: `Bearer ${accessToken}`,

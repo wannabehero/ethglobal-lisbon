@@ -22,7 +22,6 @@ export class TruelayerController {
   async callback(@Query('code') code: string) {
     const accessToken = await this.svc.getAccessToken(code);
     const totalBalance = await this.svc.getTotalBalance(accessToken);
-
     this.logger.log(`Total balance: ${totalBalance}`);
 
     const target = 100;

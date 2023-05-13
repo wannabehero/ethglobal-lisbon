@@ -1,0 +1,20 @@
+{
+  "inputs": [
+    {
+      "name": "income",
+      "public": false,
+      "type": "field"
+    },
+    {
+      "name": "target",
+      "public": true,
+      "type": "field"
+    }
+  ],
+  "output": {
+    "type": "tuple",
+    "components": {
+      "elements": []
+    }
+  }
+}
