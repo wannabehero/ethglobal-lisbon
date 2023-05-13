@@ -1,13 +1,17 @@
-import { App, Button, Descriptions, List, Typography } from 'antd';
+import { App, Button, Descriptions, List, Result, Spin, Typography } from 'antd';
 import { useAccount, useProvider, useSigner } from 'wagmi';
 import { useCreditScore } from '../../hooks/useCreditScore';
 import ClaimHelperCard from '../ClaimHelperCard';
 import { IClaimHelperItem } from './interfaces';
 import { SismoConnect } from '@sismo-core/sismo-connect-client';
 import { SISMO_CONFIG } from '../ClaimHelperCard/consts';
+import { useHelperClaims } from './hooks';
 
 export default function MainBureau() {
+  const { helperClaims, isLoading, reloadHelperClaims } = useHelperClaims();
   const { modal, message } = App.useApp();
+
+  const reloadButton = <Button onClick={reloadHelperClaims}>Reload</Button>;
 
   const provider = useProvider();
   const { address } = useAccount();
@@ -19,28 +23,29 @@ export default function MainBureau() {
       label: 'World ID',
       url: 'https://develop.worldcoin.org/',
       scoreRate: '0.2',
-      // todo: data to get proof of identity
+      verified: false,
     },
     {
       cardKey: 'sismo-noun',
       label: 'Noun owner with Sismo',
       url: 'https://sismo.io/',
       scoreRate: '0.05',
-      // todo: data to get proof of ownership
+      verified: false,
     },
     {
       cardKey: 'true-layer',
       label: 'ZK Proof of Funds',
       url: 'https://truelayer.com/',
       scoreRate: '0.2',
-      // todo: data to get proof of funds
+      verified: false,
     },
     {
       cardKey: 'polygon-id',
       label: 'ZP Proof of Diploma',
       url: 'https://polygon.technology/',
       scoreRate: '0.1',
-    }
+      verified: false,
+    },
   ];
 
   // TODO: pull from smart contract
@@ -71,6 +76,10 @@ export default function MainBureau() {
 
   return (
     <div className="content-inner">
+      {isLoading && <Spin tip="Loading" />}
+      {!isLoading && helperClaims === undefined && (
+        <Result status="error" title="Cannot load markets" extra={reloadButton} />
+      )}
       {!address && <Typography.Title level={3}> Please connect your wallet </Typography.Title>}
       {address && (
         <Descriptions layout="vertical" bordered column={3}>
@@ -82,11 +91,15 @@ export default function MainBureau() {
             <List
               grid={{ gutter: 16, column: 4 }}
               dataSource={claimsData}
-              renderItem={(item) => (
-                <List.Item>
-                  <ClaimHelperCard {...item} />
-                </List.Item>
-              )}
+              renderItem={(item) => {
+                item.verified =
+                  helperClaims?.find((claim) => claim.id === item.cardKey)?.verified || false;
+                return (
+                  <List.Item>
+                    <ClaimHelperCard {...item} />
+                  </List.Item>
+                );
+              }}
             />
           </Descriptions.Item>
           <Descriptions.Item label="Borrowed Balance">{borrowedBalance}</Descriptions.Item>
