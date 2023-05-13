@@ -8,7 +8,7 @@ import Header from './components/Header';
 import MainBureau from './components/MainBureau';
 
 function App() {
-  const ACCENT_COLOR = '#4A90E2';
+  const ACCENT_COLOR = '#00A86B';
   const BORDER_RADIUS = 6;
   const RAINBOW_THEME = {
     darkMode: darkTheme({
@@ -29,7 +29,7 @@ function App() {
       <WagmiConfig client={wagmiClient}>
         <RainbowKitProvider
           chains={chains}
-          // theme={RAINBOW_THEME}
+          theme={RAINBOW_THEME}
           initialChain={polygonMumbai}
           showRecentTransactions
           appInfo={{

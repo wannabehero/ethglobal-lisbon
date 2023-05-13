@@ -1,47 +1,49 @@
-import { App, Button, Descriptions, List, Typography } from 'antd';
-import { useAccount, useProvider, useSigner } from 'wagmi';
+import { App, Button, Descriptions, List, Space, Typography } from 'antd';
+import { useAccount, useProvider } from 'wagmi';
 import { useCreditScore } from '../../hooks/useCreditScore';
 import ClaimHelperCard from '../ClaimHelperCard';
 import { IClaimHelperItem } from './interfaces';
 import { SismoConnect } from '@sismo-core/sismo-connect-client';
 import { SISMO_CONFIG } from '../ClaimHelperCard/consts';
+import TokenInfo from '../TokenInfo';
+import { DAI, jEUR } from '../../web3/consts';
+import TokenValueInput from '../TokenValueInput/TokenValueInput';
+
+const claimsData: IClaimHelperItem[] = [
+  {
+    cardKey: 'wc-id',
+    label: 'World ID',
+    url: 'https://develop.worldcoin.org/',
+    scoreRate: '0.2',
+    // todo: data to get proof of identity
+  },
+  {
+    cardKey: 'sismo-noun',
+    label: 'Noun owner with Sismo',
+    url: 'https://sismo.io/',
+    scoreRate: '0.05',
+    // todo: data to get proof of ownership
+  },
+  {
+    cardKey: 'true-layer',
+    label: 'ZK Proof of Funds',
+    url: 'https://truelayer.com/',
+    scoreRate: '0.2',
+    // todo: data to get proof of funds
+  },
+  {
+    cardKey: 'polygon-id',
+    label: 'ZP Proof of Diploma',
+    url: 'https://polygon.technology/',
+    scoreRate: '0.1',
+  }
+];
 
 export default function MainBureau() {
-  const { modal, message } = App.useApp();
+  const { message } = App.useApp();
 
   const provider = useProvider();
   const { address } = useAccount();
-  const { data: signer } = useSigner();
-
-  const claimsData: IClaimHelperItem[] = [
-    {
-      cardKey: 'wc-id',
-      label: 'World ID',
-      url: 'https://develop.worldcoin.org/',
-      scoreRate: '0.2',
-      // todo: data to get proof of identity
-    },
-    {
-      cardKey: 'sismo-noun',
-      label: 'Noun owner with Sismo',
-      url: 'https://sismo.io/',
-      scoreRate: '0.05',
-      // todo: data to get proof of ownership
-    },
-    {
-      cardKey: 'true-layer',
-      label: 'ZK Proof of Funds',
-      url: 'https://truelayer.com/',
-      scoreRate: '0.2',
-      // todo: data to get proof of funds
-    },
-    {
-      cardKey: 'polygon-id',
-      label: 'ZP Proof of Diploma',
-      url: 'https://polygon.technology/',
-      scoreRate: '0.1',
-    }
-  ];
 
   // TODO: pull from smart contract
   const borrowedBalance = 0;
@@ -69,6 +71,17 @@ export default function MainBureau() {
     }
   }
 
+  // const [value, setValue] = useState<string>('');
+  // const [symbol, setSymbol] = useState<string>('');
+  // const { contract } = useContract(token, getERCTokenContract);
+
+  // useEffect(() => {
+  //   if (!contract) {
+  //     return;
+  //   }
+  //   contract.symbol().then(setSymbol);
+  // }, [contract]);
+
   return (
     <div className="content-inner">
       {!address && <Typography.Title level={3}> Please connect your wallet </Typography.Title>}
@@ -89,19 +102,39 @@ export default function MainBureau() {
               )}
             />
           </Descriptions.Item>
-          <Descriptions.Item label="Borrowed Balance">{borrowedBalance}</Descriptions.Item>
-          <Descriptions.Item>
-            <Button type="primary">Borrow</Button>
+          <Descriptions.Item label="Wallet">
+            <TokenInfo token={DAI} />
+            <TokenInfo token={jEUR} />
           </Descriptions.Item>
-          <Descriptions.Item>
-            <Button type="primary">Repay</Button>
+          <Descriptions.Item label="Debt">
+            <Space direction='vertical'>
+              {borrowedBalance}
+              <TokenValueInput
+                action='Borrow'
+                symbol='jEUR'
+                onAction={(value) => console.log(value)}
+              />
+              <TokenValueInput
+                action='Repay'
+                symbol='jEUR'
+                onAction={(value) => console.log(value)}
+              />
+            </Space>
           </Descriptions.Item>
-          <Descriptions.Item label="Collateral Balance">{collateralBalance}</Descriptions.Item>
-          <Descriptions.Item>
-            <Button type="primary">Increase</Button>
-          </Descriptions.Item>
-          <Descriptions.Item>
-            <Button type="primary">Withdraw</Button>
+          <Descriptions.Item label="Collateral">
+            <Space direction='vertical'>
+              {collateralBalance}
+              <TokenValueInput
+                action='Increase'
+                symbol='DAI'
+                onAction={(value) => console.log(value)}
+              />
+              <TokenValueInput
+                action='Withdraw'
+                symbol='DAI'
+                onAction={(value) => console.log(value)}
+              />
+            </Space>
           </Descriptions.Item>
         </Descriptions>
       )}

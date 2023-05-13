@@ -9,8 +9,8 @@ import "hardhat/console.sol";
 
 contract ERC20Lender is Context {
     Bureau private immutable _bureau;
-    IERC20 private immutable _lendingToken;
-    IERC20 private immutable _collateralToken;
+    IERC20 public immutable LENDING_TOKEN;
+    IERC20 public immutable COLLATERAL_TOKEN;
 
     mapping (address => uint256) private _collaterals;
     mapping (address => uint256) private _loans;
@@ -21,8 +21,8 @@ contract ERC20Lender is Context {
         IERC20 collateralToken_
     ) {
         _bureau = bureau_;
-        _lendingToken = lendingToken_;
-        _collateralToken = collateralToken_;
+        LENDING_TOKEN = lendingToken_;
+        COLLATERAL_TOKEN = collateralToken_;
     }
 
     function collateralBalance(address account) external view returns (uint256) {
@@ -36,7 +36,7 @@ contract ERC20Lender is Context {
     function collateralRequired(address account, uint256 amount) public view returns (uint256) {
         Bureau.Score memory score = _bureau.score(account);
 
-        uint256 _lendingValue = _tokenValue(_lendingToken, amount);
+        uint256 _lendingValue = _tokenValue(LENDING_TOKEN, amount);
 
         return _lendingValue * score.collateralCoef / 1 ether;
     }
@@ -51,25 +51,25 @@ contract ERC20Lender is Context {
 
         _loans[account] += amount;
 
-        _lendingToken.transfer(account, amount);
+        LENDING_TOKEN.transfer(account, amount);
 
-        _bureau.onBorrow(account, _tokenValue(_collateralToken, amount));
+        _bureau.onBorrow(account, _tokenValue(COLLATERAL_TOKEN, amount));
     }
 
     function repay(uint256 amount) external {
         _loans[_msgSender()] -= amount;
 
-        _lendingToken.transferFrom(_msgSender(), address(this), amount);
+        LENDING_TOKEN.transferFrom(_msgSender(), address(this), amount);
 
-        _bureau.onRepay(_msgSender(), _tokenValue(_collateralToken, amount));
+        _bureau.onRepay(_msgSender(), _tokenValue(COLLATERAL_TOKEN, amount));
     }
 
     function increaseCollateral(uint256 amount) external {
         _collaterals[_msgSender()] += amount;
 
-        _collateralToken.transferFrom(_msgSender(), address(this), amount);
+        COLLATERAL_TOKEN.transferFrom(_msgSender(), address(this), amount);
 
-        _bureau.onIncreaseCollateral(_msgSender(), _tokenValue(_collateralToken, amount));
+        _bureau.onIncreaseCollateral(_msgSender(), _tokenValue(COLLATERAL_TOKEN, amount));
     }
 
     function decreaseCollateral(uint256 amount) external {
@@ -77,9 +77,9 @@ contract ERC20Lender is Context {
 
         _collaterals[_msgSender()] -= amount;
 
-        _collateralToken.transfer(_msgSender(), amount);
+        COLLATERAL_TOKEN.transfer(_msgSender(), amount);
 
-        _bureau.onDecreaseCollateral(_msgSender(), _tokenValue(_collateralToken, amount));
+        _bureau.onDecreaseCollateral(_msgSender(), _tokenValue(COLLATERAL_TOKEN, amount));
     }
 
     function liquidate(address account) external {
