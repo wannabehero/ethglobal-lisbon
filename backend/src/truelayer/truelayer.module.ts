@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TruelayerController } from './truelayer.controller';
 import { TruelayerService } from './truelayer.service';
-import { ZkModule } from 'src/zk/zk.module';
+import { ZkModule } from '../zk/zk.module';
 
 @Module({
   imports: [ZkModule],

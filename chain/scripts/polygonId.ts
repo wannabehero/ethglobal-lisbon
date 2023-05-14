@@ -1,9 +1,7 @@
 import { ethers } from "hardhat";
-import { LATEST_BUREAU } from "./const";
+import { CryptoBureau } from "../typechain-types";
 
-async function deploy() {
-  const bureau = await ethers.getContractAt("CryptoBureau", LATEST_BUREAU);
-
+export async function deploy(bureau: CryptoBureau) {
   const PolygonIdHelper = await ethers.getContractFactory("PolygonIdHelper", {
     libraries: {
       SpongePoseidon: "0x12d8C87A61dAa6DD31d8196187cFa37d1C647153",
@@ -17,12 +15,8 @@ async function deploy() {
     multiplier: ethers.utils.parseEther("1.1"),
   });
 
-  console.log("contract address:", helper.address);
+  console.log("PolygonIdHelper address:", helper.address);
 
-  return helper;
-}
-
-async function main() {
   // KYC
   // // you can run https://go.dev/play/p/rnrRbxXTRY6 to get schema hash and claimPathKey using YOUR schema
   // const schemaBigInt = "74977327600848231385663280181476307657"
@@ -43,9 +37,6 @@ async function main() {
     value: [95, ...new Array(63).fill(0).map(i => 0)],
   };
 
-  const helper = await deploy();
-  // const helper = await ethers.getContractAt("PolygonIdHelper", "0xAB4B07cC81f14Baf1a9Cb818536feB5D93f2135f");
-
   const validatorAddress = "0xF2D4Eeb4d455fb673104902282Ce68B9ce4Ac450"; // sig validator
   // const validatorAddress = "0x3DcAe4c8d94359D31e4C89D7F2b944859408C618"; // mtp validator
 
@@ -63,8 +54,3 @@ async function main() {
     console.log("error: ", e);
   }
 }
-
-main().catch((e) => {
-  console.log("error: ", e);
-  process.exit(1);
-});

@@ -1,8 +1,8 @@
 import { ethers } from "hardhat";
-import { LATEST_BUREAU, ZK_VERIFIER } from "./const";
+import { ZK_VERIFIER } from "./const";
+import { CryptoBureau } from "../typechain-types";
 
-async function main() {
-  const bureau = await ethers.getContractAt("CryptoBureau", LATEST_BUREAU);
+export async function deploy(bureau: CryptoBureau) {
   const TrueLayerHelper = await ethers.getContractFactory("TrueLayerHelper");
   const helper = await TrueLayerHelper.deploy(
     bureau.address,
@@ -16,8 +16,3 @@ async function main() {
 
   console.log("TrueLayerHelper deployed to:", helper.address);
 }
-
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});

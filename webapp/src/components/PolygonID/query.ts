@@ -1,3 +1,5 @@
+import { POLYGON_HELPER_ADDRESS } from "../../web3/consts";
+
 export const query = {
   id: "7f38a193-0918-4a48-9fac-36adfdb8b542",
   typ: "application/iden3comm-plain-json",
@@ -7,8 +9,7 @@ export const query = {
   body: {
     reason: "for Credit Score verification",
     transaction_data: {
-      contract_address:
-        "0x0454Bc19ce5016ffbA03adDC99D1Aae94EAd0e3d", // gpa
+      contract_address: POLYGON_HELPER_ADDRESS, // gpa
       method_id: "b68967e2",
       chain_id: 80001,
       network: "polygon-mumbai"
