@@ -158,10 +158,15 @@ export default function MainBureau() {
   };
 
   const availableToBorrow = useMemo(() => {
-    if (collateralCoef.isZero() || collateralBalance.isZero()) {
+    if (collateralCoef.isZero() || collateralBalance.isZero() ) {
       return BigNumber.from(0);
     }
-    return collateralBalance.mul(ethers.utils.parseEther('1')).div(collateralCoef);
+    const newValueAvailable = collateralBalance.mul(ethers.utils.parseEther('1')).div(collateralCoef);
+    if (!borrowedBalance.isZero()) {
+      return borrowedBalance.gte(newValueAvailable) ? BigNumber.from(0) : newValueAvailable.sub(borrowedBalance);
+    } else {
+      return newValueAvailable;
+    }
   }, [collateralBalance, collateralCoef]);
 
   return (
