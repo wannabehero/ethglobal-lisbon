@@ -1,6 +1,6 @@
 import { CredentialType, ISuccessResult, IDKitWidget, solidityEncode } from '@worldcoin/idkit';
 import { message, Button, Tag } from 'antd';
-import { ContractTransaction, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import { useCallback, useState } from 'react';
 import {
   WORLD_ID_APP_ACTION,

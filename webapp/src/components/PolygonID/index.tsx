@@ -1,7 +1,7 @@
 import { App, Button, QRCode, Tag, message } from 'antd';
 import { CheckCircleOutlined } from '@ant-design/icons';
 import { query } from './query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { getPolygonHelper } from '../../web3/contracts';
 import { useProvider } from 'wagmi';
 
@@ -14,7 +14,6 @@ const PolygonID = ({ verified, onSuccess }: PolygonIDProps) => {
   const provider = useProvider();
   const { modal } = App.useApp();
 
-  const [proofAccepted, setProofAccepted] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
   const qr = <QRCode value={JSON.stringify(query)} color="#6e38cc" size={512} />;
@@ -24,11 +23,10 @@ const PolygonID = ({ verified, onSuccess }: PolygonIDProps) => {
     const polygonContract = await getPolygonHelper(provider);
     polygonContract.once('ProofAccepted', () => {
       console.log(`Proof accepted for Polygon! Received the event!`);
-      setProofAccepted(true);
       onSuccess();
       polygonContract.removeAllListeners('ProofAccepted');
       destroyModal();
-
+      setIsSuccess(true);
       message.success('Diploma via Polygon ID Verified!');
     });
   };
@@ -45,17 +43,11 @@ const PolygonID = ({ verified, onSuccess }: PolygonIDProps) => {
     listenToVerify(destroy);
   };
 
-  useEffect(() => {
-    if (verified) return;
-    if (!proofAccepted) return;
-    setIsSuccess(true);
-  }, [proofAccepted, verified]);
-
   return (
     <>
       {verified || isSuccess ? (
         <Tag icon={<CheckCircleOutlined />} color="success">
-          Educated enough. Diploma checked!
+          Educated enough
         </Tag>
       ) : (
         <Button shape="round" onClick={onProof}>

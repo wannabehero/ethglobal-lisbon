@@ -1,7 +1,7 @@
 import { ethers } from "hardhat";
 import { WORLD_ID_ACTION_ID, WORLD_ID_ADDRESS, WORLD_ID_APP_ID } from "./consts";
 
-async function main() {
+export async function deploy() {
   const CryptoBureau = await ethers.getContractFactory("CryptoBureau");
   const bureau = await CryptoBureau.deploy(
     WORLD_ID_ADDRESS,
@@ -12,11 +12,6 @@ async function main() {
   await bureau.deployed();
 
   console.log("CryptoBureau deployed to:", bureau.address);
-}
 
-// We recommend this pattern to be able to use async/await everywhere
-// and properly handle errors.
-main().catch((error) => {
-  console.error(error);
-  process.exitCode = 1;
-});
+  return bureau;
+}

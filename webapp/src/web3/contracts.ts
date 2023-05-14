@@ -4,7 +4,6 @@ import CryptoBureau from '../../../chain/artifacts/contracts/CryptoBureau.sol/Cr
 import SismoHelper from '../../../chain/artifacts/contracts/helpers/SismoHelper.sol/SismoHelper.json';
 import TrueLayerHelper from '../../../chain/artifacts/contracts/helpers/TrueLayerHelper.sol/TrueLayerHelper.json';
 import PolygonHelper from '../../../chain/artifacts/contracts/helpers/PolygonIdHelper.sol/PolygonIdHelper.json';
-import Verifier from '../../../chain/artifacts/contracts/ZKVerifier.sol/Verifier.json';
 import IERC20 from '../../../chain/artifacts/@openzeppelin/contracts/token/ERC20/extensions/IERC20Metadata.sol/IERC20Metadata.json';
 import ERC20Lender from '../../../chain/artifacts/contracts/ERC20Lender.sol/ERC20Lender.json';
 import { CryptoBureauContract, ERC20Contract, LenderContract } from './types';
@@ -12,7 +11,6 @@ import {
   POLYGON_HELPER_ADDRESS,
   SISMO_HELPER_ADDRESS,
   TRUE_LAYER_HELPER_ADDRESS,
-  ZK_VERIFIER_ADDRESS,
 } from './consts';
 import { HelperClaim } from '../components/MainBureau/hooks';
 
@@ -24,7 +22,6 @@ const CryptoBureauInterface = new ethers.utils.Interface(CryptoBureau.abi);
 const SismoHelperInterface = new ethers.utils.Interface(SismoHelper.abi);
 const TrueLayerHelperInterface = new ethers.utils.Interface(TrueLayerHelper.abi);
 const PolygonHelperInterface = new ethers.utils.Interface(PolygonHelper.abi);
-const ZKVerifierInterface = new ethers.utils.Interface(Verifier.abi);
 const ERC20LenderInterface = new ethers.utils.Interface(ERC20Lender.abi);
 const ERC20Interface = new ethers.utils.Interface(IERC20.abi);
 
@@ -54,15 +51,6 @@ export async function getPolygonHelper(provide: SignerOrProvider): Promise<Contr
     provide,
   );
   return polygonHelper;
-}
-
-export async function getZKVerifier(provider: SignerOrProvider): Promise<Contract> {
-  const zkVerifier = new ethers.Contract(
-    ZK_VERIFIER_ADDRESS,
-    ZKVerifierInterface,
-    provider,
-  );
-  return zkVerifier;
 }
 
 export async function getERC20Lender(address: string, provider: SignerOrProvider): Promise<LenderContract> {
