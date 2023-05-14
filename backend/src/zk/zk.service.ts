@@ -47,7 +47,7 @@ export class ZkService {
     return proof;
   }
 
-  // NOTE: does not work properly with zorkates-js
+  // NOTE: does not work properly with zorkates-js when using with hardhat
   private async _generateProof(account: string, income: number, target: number): Promise<object> {
     this.logger.log(`Generating proof for ${account} with ${income} >= ${target}`);
 

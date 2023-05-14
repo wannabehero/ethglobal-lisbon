@@ -1,14 +1,29 @@
 # CryptoBureau
 
-```
-npx hardhat run scripts/bureau.ts --network mumbai
+## Deployment
+Populate env first
+```sh
+WORLD_ID_APP_ID=app_staging_111222
+WORLD_ID_ACTION_ID=register
+PRIVATE_KEY=0xpriVatEkeY
 ```
 
-Put address to scripts/consts.ts
+then deploy
+```sh
+npx hardhat run scripts/full.ts --network mumbai
+```
 
+## Zokrates
+
+Install zorkates https://zokrates.github.io/gettingstarted.html
+
+```sh
+# get new verifier contract
+cd circuits
+zokrates export-verifier
 ```
-npx hardhat run scripts/trueLayer.ts --network mumbai
-npx hardhat run scripts/sismo.ts --network mumbai
-npx hardhat run scripts/polygonId.ts --network mumbai
-npx hardhat run scripts/lender.ts --network mumbai
-```
+
+## PolygonID
+Use https://issuer-demo.polygonid.me/ to generate a custom claim
+
+Schema url: https://raw.githubusercontent.com/wannabehero/ethglobal-lisbon/main/chain/id/diploma.json
