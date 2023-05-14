@@ -22,6 +22,13 @@ const claimsData: IClaimHelperItem[] = [
     verified: false,
   },
   {
+    cardKey: 'polygon-id',
+    label: 'ZP Proof of Diploma',
+    url: 'https://polygon.technology/',
+    scoreRate: '0.1',
+    verified: false,
+  },
+  {
     cardKey: 'sismo-noun',
     label: 'Noun owner with Sismo',
     url: 'https://sismo.io/',
@@ -33,13 +40,6 @@ const claimsData: IClaimHelperItem[] = [
     label: 'ZK Proof of Funds',
     url: 'https://truelayer.com/',
     scoreRate: '0.2',
-    verified: false,
-  },
-  {
-    cardKey: 'polygon-id',
-    label: 'ZP Proof of Diploma',
-    url: 'https://polygon.technology/',
-    scoreRate: '0.1',
     verified: false,
   }
 ];

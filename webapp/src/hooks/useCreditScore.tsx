@@ -6,7 +6,7 @@ import { CRYPTO_BUREAU_ADDRESS } from '../web3/consts';
 import { ethers } from 'ethers';
 
 const DEFAULT_SCORE = ethers.utils.parseEther('0');
-const DEFAULT_COEF = ethers.utils.parseEther('0');
+const DEFAULT_COEF = ethers.utils.parseEther('1.5');
 
 export function useCreditScore() {
   const provider = useProvider();

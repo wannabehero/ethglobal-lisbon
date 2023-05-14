@@ -9,7 +9,7 @@ export default function Header() {
     <Layout.Header className="header">
       <Space direction="horizontal" size="large">
         <Typography.Title level={2}>
-          <span style={{ color: 'white' }}>Credit Bureau</span>
+          <span style={{ color: 'white' }}>Crypto Bureau</span>
         </Typography.Title>
         <ConnectButton />
       </Space>

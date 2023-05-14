@@ -15,3 +15,7 @@ export async function deploy() {
 
   return bureau;
 }
+
+export async function load(address: string) {
+  return await ethers.getContractAt("CryptoBureau", address);
+}

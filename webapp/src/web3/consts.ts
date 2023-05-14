@@ -1,8 +1,10 @@
+import deployments from '../../../chain/deployments.json';
+
 export const DAI = "0xF14f9596430931E177469715c591513308244e8F";
 export const jEUR = "0x6bF2BC4BD4277737bd50cF377851eCF81B62e320";
 
-export const CRYPTO_BUREAU_ADDRESS = '0xbC7a972b5A0B73F2DAa7425876e6583123c99af5';
-export const TRUE_LAYER_HELPER_ADDRESS = '0xE4b592643222725c1ecDc121f888B6E444689Ff8';
-export const SISMO_HELPER_ADDRESS = '0x10B065C233b01af5864e4775ed7a9f23FEfA98Ae';
-export const POLYGON_HELPER_ADDRESS = '0x16F9998857Cdf0a5cA615e400e5c496a38Ae4253';
-export const LENDER_ADDRESS = '0x1f059e58F5ce3Ba6759007dc31AAaF2A973Ba10e';
+export const CRYPTO_BUREAU_ADDRESS = deployments.bureau;
+export const TRUE_LAYER_HELPER_ADDRESS = deployments.trueLayer;
+export const SISMO_HELPER_ADDRESS = deployments.sismo;
+export const POLYGON_HELPER_ADDRESS = deployments.polygonId;
+export const LENDER_ADDRESS = deployments.lender;

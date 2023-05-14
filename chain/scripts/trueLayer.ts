@@ -1,6 +1,6 @@
 import { ethers } from "hardhat";
 import { ZK_VERIFIER } from "./const";
-import { CryptoBureau } from "../typechain-types";
+import { CryptoBureau, TrueLayerHelper } from "../typechain-types";
 
 export async function deploy(bureau: CryptoBureau) {
   const TrueLayerHelper = await ethers.getContractFactory("TrueLayerHelper");
@@ -10,9 +10,16 @@ export async function deploy(bureau: CryptoBureau) {
   );
   await helper.deployed();
 
+  console.log("TrueLayerHelper deployed to:", helper.address);
+  return helper;
+}
+
+export async function setInBureau(bureau: CryptoBureau, helper: TrueLayerHelper) {
   await bureau.setHelper(helper.address, {
     multiplier: ethers.utils.parseEther("2"),
-  });
+  }).then((tx) => tx.wait());
+}
 
-  console.log("TrueLayerHelper deployed to:", helper.address);
+export async function load(address: string) {
+  return await ethers.getContractAt("TrueLayerHelper", address);
 }

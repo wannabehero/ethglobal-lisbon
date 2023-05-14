@@ -1,5 +1,5 @@
 import { ethers } from "hardhat";
-import { CryptoBureau } from "../typechain-types";
+import { CryptoBureau, PolygonIdHelper } from "../typechain-types";
 
 export async function deploy(bureau: CryptoBureau) {
   const PolygonIdHelper = await ethers.getContractFactory("PolygonIdHelper", {
@@ -10,13 +10,17 @@ export async function deploy(bureau: CryptoBureau) {
   } );
   const helper = await PolygonIdHelper.deploy(bureau.address);
   await helper.deployed();
+  console.log("PolygonIdHelper address:", helper.address);
+  return helper;
+}
 
+export async function setInBureau(bureau: CryptoBureau, helper: PolygonIdHelper) {
   await bureau.setHelper(helper.address, {
     multiplier: ethers.utils.parseEther("1.1"),
-  });
+  }).then((tx) => tx.wait());
+}
 
-  console.log("PolygonIdHelper address:", helper.address);
-
+export async function setZKPRequest(helper: PolygonIdHelper) {
   // KYC
   // // you can run https://go.dev/play/p/rnrRbxXTRY6 to get schema hash and claimPathKey using YOUR schema
   // const schemaBigInt = "74977327600848231385663280181476307657"
@@ -40,17 +44,13 @@ export async function deploy(bureau: CryptoBureau) {
   const validatorAddress = "0xF2D4Eeb4d455fb673104902282Ce68B9ce4Ac450"; // sig validator
   // const validatorAddress = "0x3DcAe4c8d94359D31e4C89D7F2b944859408C618"; // mtp validator
 
-  try {
-    await helper.setZKPRequest(
-        requestId,
-        validatorAddress,
-        query.schema,
-        query.claimPathKey,
-        query.operator,
-        query.value
-    );
-    console.log("Request set");
-  } catch (e) {
-    console.log("error: ", e);
-  }
+  await helper.setZKPRequest(
+    requestId,
+    validatorAddress,
+    query.schema,
+    query.claimPathKey,
+    query.operator,
+    query.value
+  ).then((tx) => tx.wait());
+  console.log("Request set");
 }

@@ -33,7 +33,7 @@ function App() {
           initialChain={polygonMumbai}
           showRecentTransactions
           appInfo={{
-            appName: 'Credit Bureau',
+            appName: 'Crypto Bureau',
           }}
         >
           <ConfigProvider
