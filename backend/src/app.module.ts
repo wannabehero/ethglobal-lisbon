@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ZkModule } from './zk/zk.module';
 import { LoggerMiddleware } from './middlewares/LoggerMiddleware';
 import { TruelayerModule } from './truelayer/truelayer.module';
+import { DataModule } from './data/data.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { TruelayerModule } from './truelayer/truelayer.module';
     }),
     ZkModule,
     TruelayerModule,
+    DataModule,
   ],
   providers: [AppService],
 })
