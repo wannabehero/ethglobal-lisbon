@@ -1,7 +1,10 @@
-# flyctl launch added from .gitignore
-# compiled output
-dist
-node_modules
+backend/dist
+chain/artifacts
+chain/cache
+chain/typechain-types
+
+**/.env
+**/node_modules
 
 # Logs
 **/logs

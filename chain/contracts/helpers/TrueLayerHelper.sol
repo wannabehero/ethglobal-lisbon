@@ -3,21 +3,23 @@ pragma solidity ^0.8.17;
 
 import { Bureau } from "../base/Bureau.sol";
 import { Helper } from "../base/Helper.sol";
-import { Verifier } from "../ZKVerifier.sol";
+import { PlonkVerifier } from "../PlonkVerifier.sol";
 
 contract TrueLayerHelper is Helper {
     error InvalidProof();
 
-    Verifier private immutable _verifier;
+    PlonkVerifier private immutable _verifier;
 
-    constructor(Bureau bureau_, Verifier verifier_) Helper(bureau_) {
+    constructor(Bureau bureau_, PlonkVerifier verifier_) Helper(bureau_) {
         _verifier = verifier_;
     }
 
-    function verify(uint256 target, Verifier.Proof calldata proof) external {
-        uint[1] memory input = [target];
+    function verify(uint256 target, bytes calldata proof) external {
+        uint[] memory input = new uint[](2);
+        input[0] = 1;
+        input[1] = target;
 
-        if (!_verifier.verifyTx(proof, input)) {
+        if (!_verifier.verifyProof(proof, input)) {
             revert InvalidProof();
         }
 

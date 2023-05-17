@@ -10,10 +10,11 @@ import { useSismoConnect } from '@sismo-core/sismo-connect-react';
 
 interface SismoConnectProps {
   verified: boolean;
+  enabled: boolean;
   onSuccess: () => void;
 }
 
-export default function SismoConnect({ verified, onSuccess }: SismoConnectProps) {
+export default function SismoConnect({ verified, enabled, onSuccess }: SismoConnectProps) {
   const { data: signer } = useSigner();
   const addRecentTransaction = useAddRecentTransaction();
 
@@ -74,8 +75,9 @@ export default function SismoConnect({ verified, onSuccess }: SismoConnectProps)
           shape="round"
           onClick={onSismoProofRequest}
           loading={isLoading}
+          disabled={!enabled}
         >
-          Prove Noun Ownership
+          Prove with Sismo
         </Button>
       )}
     </>

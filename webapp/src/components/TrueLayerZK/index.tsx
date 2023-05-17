@@ -9,10 +9,11 @@ const TARGET = 200;
 
 interface TrueLayerZKProps {
   verified: boolean;
+  enabled: boolean;
   onSuccess: () => void;
 }
 
-const TrueLayerZK = ({ verified, onSuccess }: TrueLayerZKProps) => {
+const TrueLayerZK = ({ verified, enabled, onSuccess }: TrueLayerZKProps) => {
   const { modal, message } = App.useApp();
   const { data: signer } = useSigner();
   const [isSuccess, setIsSuccess] = useState(false);
@@ -81,7 +82,7 @@ const TrueLayerZK = ({ verified, onSuccess }: TrueLayerZKProps) => {
           Wealthy enough
         </Tag>
       ) : (
-        <Button shape="round" onClick={openAuth} loading={isLoading}>
+        <Button shape="round" onClick={openAuth} loading={isLoading} disabled={!enabled}>
           Prove old-school wealth
         </Button>
       )

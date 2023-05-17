@@ -7,10 +7,11 @@ import { useProvider } from 'wagmi';
 
 interface PolygonIDProps {
   verified: boolean;
+  enabled: boolean;
   onSuccess: () => void;
 }
 
-const PolygonID = ({ verified, onSuccess }: PolygonIDProps) => {
+const PolygonID = ({ verified, enabled, onSuccess }: PolygonIDProps) => {
   const provider = useProvider();
   const { modal } = App.useApp();
 
@@ -50,7 +51,7 @@ const PolygonID = ({ verified, onSuccess }: PolygonIDProps) => {
           Educated enough
         </Tag>
       ) : (
-        <Button shape="round" onClick={onProof}>
+        <Button shape="round" onClick={onProof} disabled={!enabled}>
           Prove GPA Score
         </Button>
       )}

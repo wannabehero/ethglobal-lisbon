@@ -66,18 +66,22 @@ export async function getHelperClaims(
     {
       id: 'wc-id',
       verified: false,
+      enabled: true,
     },
     {
       id: 'sismo-noun',
       verified: false,
+      enabled: false,
     },
     {
       id: 'true-layer',
       verified: false,
+      enabled: false,
     },
     {
       id: 'polygon-id',
       verified: false,
+      enabled: false,
     },
   ];
 
@@ -99,6 +103,12 @@ export async function getHelperClaims(
       claims[0].verified = true;
     } catch (e) {
       console.log(`World ID claim verification failed, consider World ID not verified: ${e}`);
+    }
+
+    if (claims[0].verified) {
+      claims.forEach((claim) => {
+        claim.enabled = true;
+      });
     }
 
     // set claims

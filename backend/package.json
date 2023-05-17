@@ -27,7 +27,7 @@
     "hbs": "^4.2.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "zokrates-js": "1.1.4"
+    "snarkjs": "^0.6.11"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

@@ -64,7 +64,7 @@ export default function WorldID({ verified, onSuccess }: WorldIDProps) {
         setIsCreating(false);
       }
     },
-    [provider, signer, addRecentTransaction, message],
+    [provider, signer, addRecentTransaction, message, onSuccess],
   );
 
   return (

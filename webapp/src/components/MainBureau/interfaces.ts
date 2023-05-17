@@ -5,4 +5,5 @@ export interface IClaimHelperItem {
     url: string;
     scoreRate: string;
     verified: boolean;
+    enabled: boolean;
   }

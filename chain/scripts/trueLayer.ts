@@ -1,12 +1,12 @@
 import { ethers } from "hardhat";
-import { ZK_VERIFIER } from "./const";
+import { PLONK_VERIFIER } from "./const";
 import { CryptoBureau, TrueLayerHelper } from "../typechain-types";
 
 export async function deploy(bureau: CryptoBureau) {
   const TrueLayerHelper = await ethers.getContractFactory("TrueLayerHelper");
   const helper = await TrueLayerHelper.deploy(
     bureau.address,
-    ZK_VERIFIER
+    PLONK_VERIFIER
   );
   await helper.deployed();
 

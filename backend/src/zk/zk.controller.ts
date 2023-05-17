@@ -10,8 +10,11 @@ export class ZkController {
     @Body() body: { account: string; income: number; target: number },
   ): Promise<object> {
     const { account, income, target } = body;
-    return this.svc.generateProof(account, income, target).catch(() => {
-      throw new HttpException('Invalid proof', 400);
-    });
+    return this.svc
+      .generateProof(account, income, target)
+      .then((data) => ({ proof: data }))
+      .catch(() => {
+        throw new HttpException('Invalid proof', 400);
+      });
   }
 }

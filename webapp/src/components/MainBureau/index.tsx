@@ -20,33 +20,37 @@ const claimsData: IClaimHelperItem[] = [
     url: 'https://develop.worldcoin.org/',
     scoreRate: '0.2',
     verified: false,
+    enabled: true,
   },
   {
     cardKey: 'polygon-id',
-    label: 'ZP Proof of Diploma',
+    label: 'Proof of Diploma',
     url: 'https://polygon.technology/',
     scoreRate: '0.1',
     verified: false,
+    enabled: false,
   },
   {
     cardKey: 'sismo-noun',
-    label: 'Noun owner with Sismo',
+    label: 'ETHGlobal Staker Proof',
     url: 'https://sismo.io/',
     scoreRate: '0.05',
     verified: false,
+    enabled: false,
   },
   {
     cardKey: 'true-layer',
-    label: 'ZK Proof of Funds',
+    label: 'Proof of Funds',
     url: 'https://truelayer.com/',
     scoreRate: '0.2',
     verified: false,
+    enabled: false,
   }
 ];
 
 export default function MainBureau() {
   const { message } = App.useApp();
-  const { helperClaims } = useHelperClaims();
+  const { helperClaims, enableAllClaims } = useHelperClaims();
 
   const { address } = useAccount();
 
@@ -184,11 +188,20 @@ export default function MainBureau() {
               grid={{ gutter: 16, column: 4 }}
               dataSource={claimsData}
               renderItem={(item) => {
-                item.verified =
-                  helperClaims?.find((claim) => claim.id === item.cardKey)?.verified || false;
+                const claim = helperClaims?.find((claim) => claim.id === item.cardKey);
+                item.verified = item.verified || (claim?.verified ?? false);
+                item.enabled = item.enabled || (claim?.enabled ?? false);
                 return (
                   <List.Item>
-                    <ClaimHelperCard item={item} onSuccess={() => reloadScore()} />
+                    <ClaimHelperCard
+                      item={{...item}}
+                      onSuccess={(key) => {
+                        reloadScore();
+                        if (key === 'wc-id') {
+                          enableAllClaims();
+                        }
+                      }}
+                    />
                   </List.Item>
                 );
               }}
@@ -210,12 +223,20 @@ export default function MainBureau() {
               )
             }
             {
-                collateralCoef && (
-                  <Typography.Paragraph>
-                    Available to borrow: {bnToScore(availableToBorrow, 4)} {lendingSymbol}
-                  </Typography.Paragraph>
-                )
-              }
+              collateralCoef && (
+                <Typography.Paragraph>
+                  Available to borrow: {bnToScore(availableToBorrow, 4)} {lendingSymbol}
+                </Typography.Paragraph>
+              )
+            }
+            <Typography.Paragraph>
+              <Button
+                type='dashed'
+                onClick={() => open('https://staging.aave.com/faucet/?marketName=proto_mumbai_v3', '_blank')}
+              >
+                DAI/jEUR faucet (aave)
+              </Button>
+            </Typography.Paragraph>
           </Descriptions.Item>
           <Descriptions.Item label="Debt">
             <Space direction='vertical'>

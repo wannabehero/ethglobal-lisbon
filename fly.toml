@@ -8,6 +8,8 @@ primary_region = "lhr"
 
 [env]
   PORT = "8080"
+  ZK_WASM_PATH = "/app/zk/gte.wasm"
+  ZK_ZKEY_PATH = "/app/zk/gte.zkey"
 
 [http_service]
   internal_port = 8080
