@@ -1,10 +1,15 @@
-backend/dist
 chain/artifacts
 chain/cache
 chain/typechain-types
 
 **/.env
 **/node_modules
+**/dist
+webapp
+
+.git
+.github
+.vercel
 
 # Logs
 **/logs

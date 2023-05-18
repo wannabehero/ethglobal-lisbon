@@ -21,6 +21,7 @@ COPY --from=builder /app/package-lock.json ./
 RUN npm install --omit=dev --ignore-scripts
 
 COPY --from=builder /app/dist ./dist
+COPY backend/views ./views
 COPY chain/snarks/gte_js/gte.wasm ./zk/gte.wasm
 COPY chain/snarks/gte_plonk.zkey ./zk/gte.zkey
 
