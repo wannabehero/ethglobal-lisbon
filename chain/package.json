@@ -16,6 +16,7 @@
   },
   "scripts": {
     "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/full.ts --network mumbai",
     "test": "hardhat test"
   }
 }
