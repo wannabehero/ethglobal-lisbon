@@ -38,14 +38,14 @@ export default function SismoConnect({ verified, enabled, onSuccess }: SismoConn
         .verify(SISMO_GROUP_ID, responseBytes);
       addRecentTransaction({
         hash: tx.hash,
-        description: 'Verify Nouns Ownership via Sismo Proof',
+        description: 'Verify ETHGlobal Staking via Sismo Proof',
       });
       const receipt = await tx.wait();
       console.log(`Sismo transaction responded with: ${receipt}`);
 
       setIsSuccess(true);
       onSuccess();
-      message.success('Nouns via Sismo Verified!');
+      message.success('ETHGlobal Staking via Sismo Verified!');
     } catch (err: any) {
       console.log(err);
       message.error(err.reason ?? err.message);
@@ -68,7 +68,7 @@ export default function SismoConnect({ verified, enabled, onSuccess }: SismoConn
     <>
       {(verified || isSuccess) ? (
         <Tag icon={<CheckCircleOutlined />} color="success">
-          Noun owner! Wow!
+          ETHGlobal Staker, wow!
         </Tag>
       ) : (
         <Button
