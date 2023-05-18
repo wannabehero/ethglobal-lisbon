@@ -27,7 +27,7 @@ const config: HardhatUserConfig = {
   networks: {
     mumbai: {
       url: "https://rpc.ankr.com/polygon_mumbai",
-      accounts: [process.env.PRIVATE_KEY!]
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : []
     },
   },
 };
