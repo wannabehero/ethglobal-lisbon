@@ -1,6 +1,6 @@
 prepare-contracts:
 	@echo "Compiling contracts..."
-	@cd chain && npm install && npm run compile
+	@cd chain && npm install && npm run compile && ls -lah
 	@echo "Compiled contracts!"
 
 build-web:
