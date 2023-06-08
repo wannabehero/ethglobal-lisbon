@@ -24,3 +24,8 @@ Smart Contracts:
 - unit-tests to simplify development
 - aave for handy testnet DAI and jEUR tokens
 
+## ETHGlobal Lisbon Hack Version
+
+Original hack version of the code is available in [`hack`](https://github.com/wannabehero/ethglobal-lisbon/tree/hack) branch.
+
+More details here: https://github.com/wannabehero/ethglobal-lisbon/pull/2
