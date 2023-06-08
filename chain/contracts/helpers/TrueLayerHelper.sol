@@ -15,9 +15,8 @@ contract TrueLayerHelper is Helper {
     }
 
     function verify(uint256 target, bytes calldata proof) external {
-        uint[] memory input = new uint[](2);
-        input[0] = 1;
-        input[1] = target;
+        uint[] memory input = new uint[](1);
+        input[0] = target;
 
         if (!_verifier.verifyProof(proof, input)) {
             revert InvalidProof();

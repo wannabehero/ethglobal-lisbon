@@ -24,7 +24,7 @@ async function run() {
 
   const [, ...params] = calldata.match(/^(0x[\w]+),(\[.+\])$/)!;
 
-  const success = await verifier.verifyProof(params[0], [1, 100]);
+  const success = await verifier.verifyProof(params[0], [100]);
 
   console.log("success", success);
 }
