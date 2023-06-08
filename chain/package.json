@@ -3,6 +3,7 @@
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^2.0.2",
     "hardhat": "^2.14.0",
+    "snarkjs": "^0.6.11",
     "solc": "^0.8.17",
     "zokrates-js": "1.1.4"
   },
@@ -11,6 +12,12 @@
     "@openzeppelin/contracts-upgradeable": "^4.8.3",
     "@sismo-core/sismo-connect-solidity": "^0.0.7",
     "@worldcoin/world-id-contracts": "^0.1.1",
+    "circomlib": "^2.0.5",
     "solidity-bytes-utils": "^0.8.0"
+  },
+  "scripts": {
+    "compile": "hardhat compile",
+    "deploy": "hardhat run scripts/full.ts --network mumbai",
+    "test": "hardhat test"
   }
 }

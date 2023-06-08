@@ -10,7 +10,8 @@
   <script>
     function sendCallback() {
       const data = {{{ proof }}};
-      window.opener.postMessage(data, "http://localhost:5173/");
+      // TODO: Provide specific target origin
+      window.opener.postMessage(data, "*");
       window.close();
     }
 

@@ -36,3 +36,10 @@ It has links to docs of all the tech used.
 ## TrueLayer (openbank api)
 - https://docs.truelayer.com/docs/quickstart-guides
 - https://console.truelayer.com/settings/
+
+## Circom
+- https://docs.circom.io/getting-started/installation/#installing-circom
+- https://docs.circom.io/more-circuits/more-basic-circuits/#extending-our-multiplier-to-three-inputs
+
+## Snarkjs
+- https://github.com/iden3/snarkjs

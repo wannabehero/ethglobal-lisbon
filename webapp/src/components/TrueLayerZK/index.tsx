@@ -4,15 +4,17 @@ import { getTrueLayerHelper } from '../../web3/contracts';
 import { useSigner } from 'wagmi';
 import { CheckCircleOutlined } from '@ant-design/icons';
 
-const AUTH_URL = 'http://localhost:3000/truelayer/auth';
+const BASE_URL = import.meta.env.VITE_BACKEND_BASE_URL as string;
+const AUTH_URL = `${BASE_URL}/truelayer/auth`;
 const TARGET = 200;
 
 interface TrueLayerZKProps {
   verified: boolean;
+  enabled: boolean;
   onSuccess: () => void;
 }
 
-const TrueLayerZK = ({ verified, onSuccess }: TrueLayerZKProps) => {
+const TrueLayerZK = ({ verified, enabled, onSuccess }: TrueLayerZKProps) => {
   const { modal, message } = App.useApp();
   const { data: signer } = useSigner();
   const [isSuccess, setIsSuccess] = useState(false);
@@ -53,7 +55,7 @@ const TrueLayerZK = ({ verified, onSuccess }: TrueLayerZKProps) => {
   }, [signer, message, modal]);
 
   const receiveMessage = (event: MessageEvent) => {
-    if (event.origin !== "http://localhost:3000") return;
+    if (event.origin !== BASE_URL) return;
 
     setProof(event.data);
   }
@@ -81,7 +83,7 @@ const TrueLayerZK = ({ verified, onSuccess }: TrueLayerZKProps) => {
           Wealthy enough
         </Tag>
       ) : (
-        <Button shape="round" onClick={openAuth} loading={isLoading}>
+        <Button shape="round" onClick={openAuth} loading={isLoading} disabled={!enabled}>
           Prove old-school wealth
         </Button>
       )

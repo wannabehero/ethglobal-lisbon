@@ -7,6 +7,7 @@ import { CRYPTO_BUREAU_ADDRESS } from '../../web3/consts';
 export interface HelperClaim {
   id: string;
   verified: boolean;
+  enabled: boolean;
 }
 
 export const useHelperClaims = () => {
@@ -36,5 +37,18 @@ export const useHelperClaims = () => {
     reloadHelperClaims(address);
   }, [address, cryptoBureau]);
 
-  return { helperClaims, reloadHelperClaims };
+  const enableAllClaims = useCallback(() => {
+    if (!helperClaims) {
+      return;
+    }
+
+    const claims = helperClaims.map((claim) => ({
+      ...claim,
+      enabled: true,
+    }));
+
+    setHelperClaims(claims);
+  }, [helperClaims, setHelperClaims]);
+
+  return { helperClaims, reloadHelperClaims, enableAllClaims };
 };

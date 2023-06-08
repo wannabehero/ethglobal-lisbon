@@ -26,11 +26,12 @@ export const SISMO_CONFIG: SismoConnectClientConfig = {
   },
 };
 
+export const SISMO_GROUP_ID: string = '0x27e5c59f7e2599944eb67801293e837d';
+
 // claim 1: request a proof of ENS handle ownership
 export const SISMO_CLAIM: ClaimRequest = {
   // ID of the group the user should be a member of
   // here: ens-domains-holders
-  groupId: '0x8b64c959a715c6b10aa8372100071ca7',
+  groupId: SISMO_GROUP_ID,
 };
 
-export const SISMO_GROUP_ID: string = '0x8b64c959a715c6b10aa8372100071ca7';

@@ -10,10 +10,11 @@ import { useSismoConnect } from '@sismo-core/sismo-connect-react';
 
 interface SismoConnectProps {
   verified: boolean;
+  enabled: boolean;
   onSuccess: () => void;
 }
 
-export default function SismoConnect({ verified, onSuccess }: SismoConnectProps) {
+export default function SismoConnect({ verified, enabled, onSuccess }: SismoConnectProps) {
   const { data: signer } = useSigner();
   const addRecentTransaction = useAddRecentTransaction();
 
@@ -37,14 +38,14 @@ export default function SismoConnect({ verified, onSuccess }: SismoConnectProps)
         .verify(SISMO_GROUP_ID, responseBytes);
       addRecentTransaction({
         hash: tx.hash,
-        description: 'Verify Nouns Ownership via Sismo Proof',
+        description: 'Verify ETHGlobal Staking via Sismo Proof',
       });
       const receipt = await tx.wait();
       console.log(`Sismo transaction responded with: ${receipt}`);
 
       setIsSuccess(true);
       onSuccess();
-      message.success('Nouns via Sismo Verified!');
+      message.success('ETHGlobal Staking via Sismo Verified!');
     } catch (err: any) {
       console.log(err);
       message.error(err.reason ?? err.message);
@@ -67,15 +68,16 @@ export default function SismoConnect({ verified, onSuccess }: SismoConnectProps)
     <>
       {(verified || isSuccess) ? (
         <Tag icon={<CheckCircleOutlined />} color="success">
-          Noun owner! Wow!
+          ETHGlobal Staker, wow!
         </Tag>
       ) : (
         <Button
           shape="round"
           onClick={onSismoProofRequest}
           loading={isLoading}
+          disabled={!enabled}
         >
-          Prove Noun Ownership
+          Prove with Sismo
         </Button>
       )}
     </>

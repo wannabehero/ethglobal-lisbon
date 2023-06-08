@@ -28,13 +28,13 @@ export class TruelayerController {
     const target = 200;
 
     try {
-      const proof = await this.zk.generateProof(
+      const data = await this.zk.generateProof(
         '0xE432a8314d971441Ad7700e8b45d66cC326CE517',
         totalBalance,
         target,
       );
       return {
-        proof: JSON.stringify(proof),
+        proof: JSON.stringify(data),
         message: '✅ Proof has been generated successfully!',
       };
     } catch (err) {
