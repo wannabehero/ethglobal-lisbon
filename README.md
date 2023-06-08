@@ -8,7 +8,8 @@ ZK Technologies:
 - WorldID for Proof of Personhood: [frontend integration](./webapp/src/components/WorldID/index.tsx) + [on-chain proof verification](./chain/contracts/CryptoBureau.sol)
 - Sismo for Proof of NFT ownership: [frontend integration](./webapp/src/components/SismoConnect/index.tsx) + [on-chain proof verififcation](./chain/contracts/helpers/SismoHelper.sol)
 - PolygonID for Proof of Education: trivial [frontend integration](./webapp/src/components/PolygonID/index.tsx) + [custom claim schema](./chain/id/diploma.json) + [on-chain proof verification](./chain//contracts/helpers/PolygonIdHelper.sol)
-- zokrates: [zk-SNARKs circuit](./chain/circuits/gte.zok) + [backend proof generation](./backend/src/zk/zk.service.ts) + [on-chain proof verification](./chain/contracts/ZKVerifier.sol)
+- zk-snarks: [circom circuit](./chain/snarks/gte.circom) + [backend proof generation](./backend/src/zk/zk.service.ts) + [on-chain proof verification](./chain/contracts/helpers/TrueLayerHelper.sol)
+- \[***deprecated***\] zokrates: [zk-SNARKs circuit](./chain/circuits/gte.zok) + [backend proof generation](./backend/src/zk/zk.service.ts) + [on-chain proof verification](./chain/contracts/ZKVerifier.sol)
 
 Frontend:
 - vite + react
